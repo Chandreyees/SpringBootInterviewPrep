@@ -1,0 +1,2449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spring Boot Master Guide — 5-Year Interview Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090f;--bg2:#0d1117;--bg3:#111827;--bg4:#161b22;
+  --border:#1e293b;--border2:#243044;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--text4:#475569;
+  --accent:#6366f1;--accent2:#818cf8;
+  --green:#22c55e;--amber:#f59e0b;--red:#ef4444;--cyan:#06b6d4;
+  --orange:#f97316;--violet:#a855f7;--teal:#14b8a6;--pink:#ec4899;
+}
+html{scroll-behavior:smooth}
+body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:#2d3748;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#4a5568}
+
+/* TOP NAV */
+#topnav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(8,9,15,0.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 24px;height:56px;gap:0;
+}
+.logo{display:flex;align-items:center;gap:10px;margin-right:32px;text-decoration:none}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#6366f1,#a855f7);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;
+  box-shadow:0 0 16px rgba(99,102,241,0.3)}
+.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--text)}
+.logo-text span{color:var(--accent2)}
+.page-tabs{display:flex;gap:2px}
+.page-tab{
+  padding:8px 20px;border:none;background:transparent;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;
+  color:var(--text3);border-bottom:2px solid transparent;
+  transition:all 0.2s;height:56px;display:flex;align-items:center;gap:8px;
+}
+.page-tab.active{color:var(--accent2);border-bottom-color:var(--accent)}
+.page-tab:hover:not(.active){color:var(--text2)}
+.nav-badge{
+  padding:2px 8px;border-radius:12px;font-size:10px;
+  background:rgba(99,102,241,0.15);color:var(--accent2);
+  border:1px solid rgba(99,102,241,0.25)
+}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.gh-btn{
+  padding:6px 14px;border-radius:7px;font-size:11px;font-weight:600;
+  background:rgba(255,255,255,0.06);border:1px solid var(--border2);
+  color:var(--text2);cursor:pointer;text-decoration:none;
+  display:flex;align-items:center;gap:6px;transition:all 0.2s;
+}
+.gh-btn:hover{background:rgba(255,255,255,0.1);color:var(--text)}
+
+/* PAGES */
+.page{display:none;padding-top:56px;min-height:100vh}
+.page.active{display:flex}
+
+/* ===== PAGE 1: LEARN ===== */
+#learn-layout{display:flex;width:100%;min-height:calc(100vh - 56px)}
+
+/* Sidebar */
+#sidebar{
+  width:260px;flex-shrink:0;background:var(--bg2);
+  border-right:1px solid var(--border);overflow-y:auto;
+  position:sticky;top:56px;height:calc(100vh - 56px);
+}
+.sidebar-section-btn{
+  width:100%;text-align:left;padding:11px 18px;
+  background:transparent;border:none;border-left:3px solid transparent;
+  color:var(--text3);cursor:pointer;font-size:12px;font-weight:700;
+  font-family:'JetBrains Mono',monospace;
+  display:flex;align-items:center;gap:10px;transition:all 0.15s;
+  text-transform:uppercase;letter-spacing:0.5px;
+}
+.sidebar-section-btn.active{color:var(--section-color);border-left-color:var(--section-color);
+  background:linear-gradient(90deg,rgba(var(--sr),var(--sg),var(--sb),0.08),transparent)}
+.sidebar-section-btn:hover:not(.active){color:var(--text2);background:rgba(255,255,255,0.03)}
+.sidebar-section-btn .sec-count{
+  margin-left:auto;font-size:10px;padding:2px 7px;border-radius:10px;
+  background:rgba(255,255,255,0.06);color:var(--text3)
+}
+.sidebar-topics{display:none}
+.sidebar-topics.open{display:block}
+.sidebar-topic-btn{
+  width:100%;text-align:left;padding:7px 18px 7px 42px;
+  background:transparent;border:none;border-left:3px solid transparent;
+  color:var(--text3);cursor:pointer;font-size:11px;
+  font-family:'JetBrains Mono',monospace;
+  display:flex;align-items:center;gap:8px;transition:all 0.12s;
+}
+.sidebar-topic-btn.active{color:var(--text);background:rgba(255,255,255,0.04)}
+.sidebar-topic-btn:hover:not(.active){color:var(--text2)}
+.level-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.sidebar-legend{padding:16px;border-top:1px solid var(--border);margin-top:8px}
+.sidebar-legend-title{font-size:10px;color:var(--text4);margin-bottom:8px;font-weight:700;letter-spacing:1px}
+.legend-item{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.legend-item span{font-size:11px;color:var(--text3)}
+
+/* Main content area */
+#main-content{flex:1;overflow-y:auto;padding:28px 32px 60px;min-width:0}
+.topic-header{margin-bottom:22px}
+.topic-meta{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.level-badge{
+  padding:3px 12px;border-radius:20px;font-size:10px;font-weight:700;
+  letter-spacing:0.5px;text-transform:uppercase;
+}
+.section-crumb{font-size:12px;color:var(--text3)}
+.topic-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;letter-spacing:-0.5px}
+
+/* Content Tabs */
+.content-tabs{display:flex;gap:2px;margin-bottom:22px;border-bottom:1px solid var(--border)}
+.content-tab{
+  padding:9px 18px;border:none;background:transparent;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;
+  color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:all 0.15s;
+}
+.content-tab.active{color:var(--section-color, var(--accent2));border-bottom-color:var(--section-color, var(--accent))}
+.content-tab:hover:not(.active){color:var(--text2)}
+
+/* Tab panels */
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* Concept content */
+.concept-body{max-width:760px;line-height:1.8}
+.concept-h{
+  font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  margin:22px 0 8px;color:var(--section-color, var(--accent2))
+}
+.concept-p{font-size:13px;color:var(--text2);margin-bottom:10px;line-height:1.8}
+.concept-li{
+  display:flex;gap:10px;margin-bottom:7px;padding-left:4px
+}
+.concept-li-bullet{color:var(--section-color, var(--accent));flex-shrink:0;margin-top:2px}
+.concept-li-text{font-size:13px;color:var(--text2);line-height:1.7}
+.concept-li-text strong{color:var(--text)}
+
+/* Code block */
+.code-block{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;margin-bottom:16px;
+}
+.code-header{
+  display:flex;align-items:center;gap:8px;padding:10px 16px;
+  background:var(--bg4);border-bottom:1px solid var(--border)
+}
+.code-dot{width:11px;height:11px;border-radius:50%}
+.code-label{margin-left:10px;font-size:11px;color:var(--text3);font-weight:600}
+.code-copy{
+  margin-left:auto;padding:4px 10px;border-radius:5px;font-size:10px;
+  background:rgba(255,255,255,0.05);border:1px solid var(--border);
+  color:var(--text3);cursor:pointer;font-family:'JetBrains Mono',monospace;
+  transition:all 0.15s;
+}
+.code-copy:hover{background:rgba(255,255,255,0.1);color:var(--text2)}
+.code-pre{
+  margin:0;padding:20px;font-size:12px;line-height:1.8;
+  color:var(--text);overflow-x:auto;font-family:'JetBrains Mono',monospace;
+  white-space:pre;
+}
+/* Syntax highlighting */
+.kw{color:#c084fc}.ann{color:#fb923c}.str{color:#86efac}
+.cmt{color:#4b5563}.num{color:#f9a8d4}.cls{color:#67e8f9}
+.fn{color:#fde68a}
+
+/* Interview panel */
+.interview-tip{
+  padding:14px 18px;border-radius:10px;margin-bottom:20px;
+  background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.2)
+}
+.interview-tip-title{font-size:11px;color:var(--accent);font-weight:700;margin-bottom:6px;letter-spacing:0.5px}
+.interview-tip-text{font-size:12px;color:var(--text2);line-height:1.7}
+.iq-card{
+  padding:14px 18px;margin-bottom:10px;background:var(--bg2);
+  border:1px solid var(--border);border-radius:9px;
+  border-left:3px solid var(--section-color, var(--accent));
+  max-width:760px;
+}
+.iq-num{color:var(--section-color, var(--accent));font-weight:700;font-size:12px;flex-shrink:0}
+.iq-text{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* Topic nav */
+.topic-nav{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:40px;padding-top:20px;border-top:1px solid var(--border);
+  max-width:760px
+}
+.nav-btn{
+  padding:9px 18px;border-radius:8px;font-size:12px;font-weight:600;
+  font-family:'JetBrains Mono',monospace;cursor:pointer;transition:all 0.15s;
+  border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text2)
+}
+.nav-btn:hover:not(:disabled){background:rgba(255,255,255,0.08);color:var(--text)}
+.nav-btn:disabled{color:var(--text4);cursor:not-allowed;opacity:0.4}
+.nav-btn.next{background:rgba(var(--sr,99),var(--sg,102),var(--sb,241),0.1);
+  border-color:rgba(var(--sr,99),var(--sg,102),var(--sb,241),0.3);
+  color:var(--section-color, var(--accent2))}
+.nav-counter{font-size:12px;color:var(--text3)}
+
+/* Right panel */
+#right-panel{
+  width:230px;flex-shrink:0;background:var(--bg2);
+  border-left:1px solid var(--border);overflow-y:auto;
+  position:sticky;top:56px;height:calc(100vh - 56px);padding:18px 14px;
+}
+.rp-section{margin-bottom:20px}
+.rp-title{font-size:10px;color:var(--text4);font-weight:700;letter-spacing:1.2px;margin-bottom:10px;text-transform:uppercase}
+.rp-chip{
+  display:block;font-size:10px;color:var(--text3);padding:4px 8px;
+  margin-bottom:3px;background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);border-radius:5px;
+  font-family:'JetBrains Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.progress-bar-wrap{margin-bottom:6px}
+.progress-bar-label{display:flex;justify-content:space-between;margin-bottom:3px}
+.progress-bar-label span{font-size:10px;color:var(--text3)}
+.progress-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;border-radius:2px;opacity:0.7}
+
+/* ===== PAGE 2: BIG4 INTERVIEWS ===== */
+#big4-layout{display:flex;width:100%;min-height:calc(100vh - 56px)}
+#big4-sidebar{
+  width:280px;flex-shrink:0;background:var(--bg2);
+  border-right:1px solid var(--border);overflow-y:auto;
+  position:sticky;top:56px;height:calc(100vh - 56px);
+}
+.big4-cat-btn{
+  width:100%;text-align:left;padding:13px 20px;
+  background:transparent;border:none;border-left:3px solid transparent;
+  cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  display:flex;align-items:center;gap:10px;transition:all 0.15s;
+  text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);
+}
+.big4-cat-btn.active{border-left-color:var(--cat-color);color:var(--cat-color);
+  background:linear-gradient(90deg,rgba(255,255,255,0.04),transparent)}
+.big4-cat-btn:hover:not(.active){color:var(--text2);background:rgba(255,255,255,0.03)}
+.big4-cat-btn .cat-icon{font-size:16px}
+.big4-cat-btn .cat-badge{
+  margin-left:auto;padding:2px 7px;border-radius:10px;font-size:10px;
+  background:rgba(255,255,255,0.06)
+}
+#big4-main{flex:1;overflow-y:auto;padding:28px 36px 60px}
+.big4-page-header{margin-bottom:32px}
+.big4-page-title{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin-bottom:8px}
+.big4-page-sub{font-size:13px;color:var(--text3);line-height:1.6}
+.big4-filters{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+.filter-btn{
+  padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;
+  background:transparent;border:1px solid var(--border);color:var(--text3);
+  cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all 0.15s;
+}
+.filter-btn.active{background:rgba(99,102,241,0.15);border-color:rgba(99,102,241,0.4);color:var(--accent2)}
+.filter-btn:hover:not(.active){border-color:var(--border2);color:var(--text2)}
+
+/* Question cards */
+.q-section{margin-bottom:36px}
+.q-section-title{
+  font-family:'Syne',sans-serif;font-size:16px;font-weight:700;
+  margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;color:var(--text)
+}
+.q-section-title .q-section-icon{font-size:18px}
+.q-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  margin-bottom:14px;overflow:hidden;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.q-card:hover{border-color:var(--border2);box-shadow:0 4px 24px rgba(0,0,0,0.3)}
+.q-card-header{
+  padding:16px 20px;cursor:pointer;
+  display:flex;align-items:flex-start;gap:14px;
+  user-select:none;
+}
+.q-card-header:hover .q-expand-icon{color:var(--text2)}
+.q-difficulty{
+  padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;flex-shrink:0;margin-top:1px;
+}
+.diff-hard{background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.25)}
+.diff-medium{background:rgba(245,158,11,0.12);color:#f59e0b;border:1px solid rgba(245,158,11,0.25)}
+.diff-expert{background:rgba(168,85,247,0.12);color:#a855f7;border:1px solid rgba(168,85,247,0.25)}
+.q-question{font-size:13px;color:var(--text);line-height:1.6;font-weight:600;flex:1}
+.q-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.q-tag{
+  padding:2px 8px;border-radius:8px;font-size:10px;
+  background:rgba(255,255,255,0.05);color:var(--text3);
+  border:1px solid var(--border)
+}
+.q-expand-icon{
+  font-size:18px;color:var(--text3);flex-shrink:0;
+  transition:transform 0.2s;margin-top:2px;
+}
+.q-card.open .q-expand-icon{transform:rotate(180deg);color:var(--accent2)}
+.q-answer{
+  display:none;padding:0 20px 20px;
+  border-top:1px solid var(--border);
+}
+.q-card.open .q-answer{display:block}
+.q-answer-content{padding-top:18px}
+.ans-section{margin-bottom:18px}
+.ans-label{
+  font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--cat-color, var(--accent));margin-bottom:8px;display:flex;align-items:center;gap:6px;
+}
+.ans-text{font-size:12px;color:var(--text2);line-height:1.8}
+.ans-text strong{color:var(--text)}
+.ans-list{list-style:none;padding:0}
+.ans-list li{
+  font-size:12px;color:var(--text2);line-height:1.7;
+  padding-left:16px;position:relative;margin-bottom:5px;
+}
+.ans-list li::before{
+  content:"▸";position:absolute;left:0;
+  color:var(--cat-color, var(--accent));font-size:10px;top:3px;
+}
+.ans-code{
+  background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:16px;font-size:11px;color:var(--text);font-family:'JetBrains Mono',monospace;
+  line-height:1.8;overflow-x:auto;white-space:pre;margin-top:10px;
+}
+.pitfall-box{
+  background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);
+  border-radius:8px;padding:12px 16px;margin-top:12px;
+}
+.pitfall-title{font-size:10px;font-weight:700;color:#ef4444;margin-bottom:6px;letter-spacing:0.5px}
+.pitfall-text{font-size:12px;color:#fca5a5;line-height:1.7}
+.tip-box{
+  background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.2);
+  border-radius:8px;padding:12px 16px;margin-top:12px;
+}
+.tip-title{font-size:10px;font-weight:700;color:#22c55e;margin-bottom:6px;letter-spacing:0.5px}
+.tip-text{font-size:12px;color:#86efac;line-height:1.7}
+.q-company-tags{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+.company-tag{
+  padding:3px 10px;border-radius:6px;font-size:10px;font-weight:700;
+  letter-spacing:0.3px;
+}
+.ctag-google{background:rgba(66,133,244,0.12);color:#60a5fa;border:1px solid rgba(66,133,244,0.25)}
+.ctag-amazon{background:rgba(255,153,0,0.12);color:#fbbf24;border:1px solid rgba(255,153,0,0.25)}
+.ctag-meta{background:rgba(24,119,242,0.12);color:#818cf8;border:1px solid rgba(24,119,242,0.25)}
+.ctag-microsoft{background:rgba(0,164,239,0.12);color:#67e8f9;border:1px solid rgba(0,164,239,0.25)}
+.ctag-netflix{background:rgba(229,9,20,0.12);color:#fca5a5;border:1px solid rgba(229,9,20,0.25)}
+.ctag-uber{background:rgba(255,255,255,0.06);color:#e2e8f0;border:1px solid rgba(255,255,255,0.15)}
+
+/* Animations */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.tab-panel.active,.page.active{animation:fadeIn 0.2s ease-out}
+.q-card{animation:fadeIn 0.2s ease-out}
+
+/* Responsive */
+@media(max-width:900px){
+  #sidebar,#right-panel,#big4-sidebar{display:none}
+  #main-content,#big4-main{padding:20px 16px 60px}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav id="topnav">
+  <a class="logo" href="#">
+    <div class="logo-icon">🍃</div>
+    <div class="logo-text">Spring<span>Boot</span></div>
+  </a>
+  <div class="page-tabs">
+    <button class="page-tab active" onclick="showPage('learn',this)">
+      📖 Learn & Concepts <span class="nav-badge">7 modules</span>
+    </button>
+    <button class="page-tab" onclick="showPage('big4',this)">
+      🎯 Big4 Interview Vault <span class="nav-badge" style="background:rgba(239,68,68,0.15);color:#fca5a5;border-color:rgba(239,68,68,0.3)">50+ Q&A</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ========== PAGE 1: LEARN ========== -->
+<div id="page-learn" class="page active">
+<div id="learn-layout">
+
+<!-- Sidebar -->
+<div id="sidebar">
+  <div id="sidebar-nav"></div>
+  <div class="sidebar-legend">
+    <div class="sidebar-legend-title">Difficulty</div>
+    <div class="legend-item"><div class="level-dot" style="background:#22c55e"></div><span>Beginner</span></div>
+    <div class="legend-item"><div class="level-dot" style="background:#f59e0b"></div><span>Intermediate</span></div>
+    <div class="legend-item"><div class="level-dot" style="background:#ef4444"></div><span>Advanced</span></div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div id="main-content">
+  <div id="topic-display"></div>
+</div>
+
+<!-- Right Panel -->
+<div id="right-panel">
+  <div class="rp-section">
+    <div class="rp-title">Key Annotations</div>
+    <span class="rp-chip">@SpringBootApplication</span>
+    <span class="rp-chip">@RestController</span>
+    <span class="rp-chip">@Service / @Repository</span>
+    <span class="rp-chip">@Transactional</span>
+    <span class="rp-chip">@Cacheable</span>
+    <span class="rp-chip">@Async</span>
+    <span class="rp-chip">@PreAuthorize</span>
+    <span class="rp-chip">@EntityGraph</span>
+    <span class="rp-chip">@CircuitBreaker</span>
+    <span class="rp-chip">@PostConstruct</span>
+  </div>
+  <div class="rp-section">
+    <div class="rp-title">HTTP Status</div>
+    <span class="rp-chip">200 OK</span>
+    <span class="rp-chip">201 Created</span>
+    <span class="rp-chip">204 No Content</span>
+    <span class="rp-chip">400 Bad Request</span>
+    <span class="rp-chip">401 Unauthorized</span>
+    <span class="rp-chip">403 Forbidden</span>
+    <span class="rp-chip">404 Not Found</span>
+    <span class="rp-chip">409 Conflict</span>
+    <span class="rp-chip">429 Rate Limited</span>
+    <span class="rp-chip">500 Server Error</span>
+  </div>
+  <div class="rp-section">
+    <div class="rp-title">Patterns</div>
+    <span class="rp-chip">Circuit Breaker</span>
+    <span class="rp-chip">Saga Pattern</span>
+    <span class="rp-chip">Outbox Pattern</span>
+    <span class="rp-chip">CQRS</span>
+    <span class="rp-chip">Event Sourcing</span>
+    <span class="rp-chip">API Gateway</span>
+    <span class="rp-chip">Sidecar</span>
+    <span class="rp-chip">Strangler Fig</span>
+  </div>
+  <div class="rp-section">
+    <div class="rp-title">Progress</div>
+    <div id="progress-bars"></div>
+  </div>
+</div>
+
+</div>
+</div>
+<!-- END PAGE 1 -->
+
+<!-- ========== PAGE 2: BIG4 ========== -->
+<div id="page-big4" class="page">
+<div id="big4-layout">
+
+<div id="big4-sidebar">
+  <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:14px;margin-bottom:4px">🎯 Interview Vault</div>
+    <div style="font-size:11px;color:var(--text3)">FAANG + Top Product Companies</div>
+  </div>
+  <div id="big4-cat-nav"></div>
+  <div style="padding:16px;border-top:1px solid var(--border);margin-top:8px">
+    <div style="font-size:10px;color:var(--text4);font-weight:700;letter-spacing:1px;margin-bottom:10px">COMPANIES</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <span class="company-tag ctag-google">Google</span>
+      <span class="company-tag ctag-amazon">Amazon</span>
+      <span class="company-tag ctag-meta">Meta</span>
+      <span class="company-tag ctag-microsoft">Microsoft</span>
+      <span class="company-tag ctag-netflix">Netflix</span>
+      <span class="company-tag ctag-uber">Uber</span>
+    </div>
+  </div>
+</div>
+
+<div id="big4-main">
+  <div class="big4-page-header">
+    <div class="big4-page-title">🎯 Big4 + FAANG Interview <span style="color:var(--accent2)">Deep Dive</span></div>
+    <div class="big4-page-sub">Advanced, tricky, and in-depth questions with full solutions — the kind asked at Google, Amazon, Meta, Microsoft, Netflix, and Uber for senior backend roles.</div>
+  </div>
+  <div class="big4-filters" id="big4-filters"></div>
+  <div id="big4-questions-container"></div>
+</div>
+
+</div>
+</div>
+<!-- END PAGE 2 -->
+
+<script>
+// ============================================================
+// DATA: LEARN SECTIONS
+// ============================================================
+const sections=[
+{id:"core",emoji:"⚙️",title:"Core Concepts",color:"#6366f1",rgb:"99,102,241",topics:[
+{title:"Spring Boot Architecture & Auto-Configuration",level:"Beginner",
+content:[
+{type:"h",text:"What is Spring Boot?"},
+{type:"p",text:"Spring Boot is an opinionated extension of the Spring Framework that eliminates boilerplate configuration and lets you build production-ready applications with minimal setup."},
+{type:"h",text:"Key Principles"},
+{type:"li",items:[
+["**Auto-configuration** — Scans the classpath and configures beans automatically (e.g., detects H2 jar → creates DataSource)"],
+["**Standalone** — Embeds Tomcat/Jetty/Undertow directly in the JAR. No WAR deployment needed."],
+["**Opinionated defaults** — Sensible defaults for most setups; override with properties when needed"],
+["**Production-ready** — Built-in Actuator for health, metrics, and management"],
+]},
+{type:"h",text:"@SpringBootApplication Internals"},
+{type:"li",items:[
+["**@Configuration** — Marks this as a source of Spring bean definitions"],
+["**@EnableAutoConfiguration** — Triggers the auto-configuration mechanism via spring.factories"],
+["**@ComponentScan** — Scans the package and sub-packages for @Component, @Service, @Repository, @Controller"],
+]},
+{type:"h",text:"How Auto-Configuration Works"},
+{type:"p",text:"Spring Boot reads META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports (Spring Boot 3) and conditionally registers beans using @ConditionalOnClass, @ConditionalOnMissingBean, @ConditionalOnProperty, etc."},
+],
+interview:["What is the difference between Spring and Spring Boot?","What does @SpringBootApplication do internally?","How does Spring Boot auto-configuration work?","What is the purpose of spring.factories / AutoConfiguration.imports?","How do you create a custom auto-configuration?","What is @ConditionalOnMissingBean used for?","What is a Spring Boot Starter?"],
+code:`@SpringBootApplication
+public class MyApp {
+    public static void main(String[] args) {
+        SpringApplication app = new SpringApplication(MyApp.class);
+        // Customize before run
+        app.setAdditionalProfiles("local");
+        app.run(args);
+    }
+}
+
+// Custom Auto-Configuration
+@AutoConfiguration
+@ConditionalOnClass(DataSource.class)
+@ConditionalOnMissingBean(DataSource.class)
+@EnableConfigurationProperties(MyDbProperties.class)
+public class MyDatabaseAutoConfig {
+
+    @Bean
+    @ConditionalOnProperty(name = "mydb.enabled", havingValue = "true")
+    public DataSource myDataSource(MyDbProperties props) {
+        return DataSourceBuilder.create()
+            .url(props.getUrl())
+            .username(props.getUsername())
+            .build();
+    }
+}`},
+
+{title:"IoC Container & Dependency Injection",level:"Beginner",
+content:[
+{type:"h",text:"IoC Container"},
+{type:"p",text:"The IoC (Inversion of Control) Container manages bean creation, lifecycle, and dependency wiring. Spring has two container types: BeanFactory (basic) and ApplicationContext (feature-rich, production-standard)."},
+{type:"h",text:"Types of Dependency Injection"},
+{type:"li",items:[
+["**Constructor Injection** (Recommended) — Injected via constructor. Supports immutability (final fields), mandatory dependencies, easy unit testing."],
+["**Setter Injection** — Via setter methods. Good for optional dependencies. Can cause NullPointerException if not set."],
+["**Field Injection** — @Autowired directly on field. Discouraged — makes testing harder, hides dependencies, can't be made immutable."],
+]},
+{type:"h",text:"Bean Scopes"},
+{type:"li",items:[
+["**singleton** (default) — One instance per Spring ApplicationContext"],
+["**prototype** — New instance every time requested from container"],
+["**request** — One per HTTP request (web apps only)"],
+["**session** — One per HTTP session"],
+["**application** — One per ServletContext lifecycle"],
+]},
+{type:"h",text:"Resolving Ambiguity"},
+{type:"p",text:"When multiple beans match a type: Spring uses @Primary to pick a default, or @Qualifier('beanName') to specify explicitly. @Autowired resolves by type first, then by name as fallback."},
+],
+interview:["What is IoC and Dependency Injection?","Constructor vs Setter vs Field injection — which is preferred and why?","What are the different bean scopes in Spring?","What is @Qualifier and when do you need it?","What is @Primary annotation?","What happens if Spring finds two beans of the same type without @Primary?","What is ObjectProvider and when would you use it?"],
+code:`// PREFERRED: Constructor Injection
+@Service
+public class OrderService {
+    private final PaymentService paymentService;
+    private final InventoryService inventoryService;
+
+    // @Autowired optional for single constructor (Spring 4.3+)
+    public OrderService(PaymentService paymentService,
+                        InventoryService inventoryService) {
+        this.paymentService = paymentService;
+        this.inventoryService = inventoryService;
+    }
+}
+
+// Handling multiple beans of same type
+@Component @Primary
+public class PayPalPaymentService implements PaymentService {}
+
+@Component("stripe")
+public class StripePaymentService implements PaymentService {}
+
+// Explicit selection
+@Service
+public class CheckoutService {
+    @Autowired
+    @Qualifier("stripe")
+    private PaymentService paymentService;
+
+    // ObjectProvider: optional/lazy injection
+    @Autowired
+    private ObjectProvider<FraudDetectionService> fraudService;
+
+    public void process(Order order) {
+        fraudService.ifAvailable(svc -> svc.check(order));
+    }
+}`},
+
+{title:"Bean Lifecycle",level:"Intermediate",
+content:[
+{type:"h",text:"Full Bean Lifecycle Sequence"},
+{type:"li",items:[
+["**1. Instantiation** — Spring creates bean via constructor"],
+["**2. Populate Properties** — @Autowired dependencies injected"],
+["**3. Aware interfaces** — setBeanName(), setBeanFactory(), setApplicationContext()"],
+["**4. BeanPostProcessor.beforeInit()** — Applied to all beans (used by AOP, etc.)"],
+["**5. @PostConstruct / InitializingBean.afterPropertiesSet()** — Custom init logic"],
+["**6. Custom init-method** — If specified in @Bean(initMethod=...)"],
+["**7. Bean is READY** — In use by application"],
+["**8. @PreDestroy / DisposableBean.destroy()** — Container shutdown cleanup"],
+]},
+{type:"h",text:"BeanPostProcessor vs BeanFactoryPostProcessor"},
+{type:"li",items:[
+["**BeanPostProcessor** — Intercepts bean instances after creation (wraps with proxy, validates, etc.)"],
+["**BeanFactoryPostProcessor** — Intercepts the BeanDefinition metadata BEFORE any beans are created (used by PropertyPlaceholderConfigurer, etc.)"],
+]},
+],
+interview:["Explain the Spring Bean lifecycle in full detail","What is BeanPostProcessor and give a production use case","BeanPostProcessor vs BeanFactoryPostProcessor — key difference?","@PostConstruct vs InitializingBean.afterPropertiesSet() — which to prefer?","Why can't you inject prototype beans directly into singletons?","How do you inject a prototype bean into a singleton correctly?"],
+code:`@Component
+public class CacheManager {
+
+    @PostConstruct
+    public void init() {
+        // Runs after all dependencies injected
+        loadWarmupData();
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        // Runs on container shutdown
+        flushPendingWrites();
+        closeConnections();
+    }
+}
+
+// Custom BeanPostProcessor (used by Spring AOP, @Async, etc.)
+@Component
+public class MetricsBeanPostProcessor implements BeanPostProcessor {
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) {
+        if (bean.getClass().isAnnotationPresent(Monitored.class)) {
+            return Proxy.newProxyInstance(...); // Wrap with monitoring proxy
+        }
+        return bean;
+    }
+}
+
+// Injecting prototype into singleton — use ObjectProvider
+@Component
+public class RequestProcessor {
+    @Autowired
+    private ObjectProvider<ExpensiveResource> resourceProvider;
+
+    public void process() {
+        ExpensiveResource resource = resourceProvider.getObject(); // New instance each time
+        resource.use();
+    }
+}`}
+]},
+
+{id:"rest",emoji:"🌐",title:"REST API Development",color:"#f97316",rgb:"249,115,22",topics:[
+{title:"Building RESTful APIs",level:"Beginner",
+content:[
+{type:"h",text:"Core Annotations"},
+{type:"li",items:[
+["**@RestController** = @Controller + @ResponseBody — returns data directly as HTTP response body"],
+["**@RequestMapping** — maps HTTP requests; @GetMapping, @PostMapping, @PutMapping, @DeleteMapping, @PatchMapping are shortcuts"],
+["**@PathVariable** — extracts value from URI path: /users/{id}"],
+["**@RequestParam** — extracts query parameter: /users?page=0"],
+["**@RequestBody** — deserializes JSON request body to Java object (uses Jackson)"],
+["**ResponseEntity<T>** — full control over status code, headers, and body"],
+]},
+{type:"h",text:"REST Best Practices"},
+{type:"li",items:[
+["Use nouns for resources: /users, /orders — NOT /getUser, /createOrder"],
+["Return 201 Created with Location header for POST"],
+["Return 204 No Content for DELETE"],
+["Use 400 for client errors, 500 for server errors — never swap these"],
+["Version APIs: /api/v1/users (URI versioning) or Accept: application/vnd.api.v1+json (header versioning)"],
+]},
+],
+interview:["@Controller vs @RestController — difference?","What is content negotiation in Spring MVC?","How does Spring handle JSON serialization/deserialization?","What is ResponseEntity and when do you use it over @ResponseBody?","How do you implement API versioning?","What is HATEOAS and does Spring support it?"],
+code:`@RestController
+@RequestMapping("/api/v1/users")
+@Validated
+public class UserController {
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+        return userService.findById(id)
+            .map(ResponseEntity::ok)
+            .orElseThrow(() -> new ResourceNotFoundException("User", id));
+    }
+
+    @PostMapping
+    public ResponseEntity<UserDTO> createUser(
+            @Valid @RequestBody CreateUserRequest req) {
+        UserDTO created = userService.create(req);
+        URI location = ServletUriComponentsBuilder
+            .fromCurrentRequest().path("/{id}")
+            .buildAndExpand(created.getId()).toUri();
+        return ResponseEntity.created(location).body(created);
+    }
+
+    @GetMapping
+    public Page<UserDTO> listUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") @Max(100) int size,
+            @RequestParam(required = false) String q,
+            @SortDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
+        return userService.search(q, pageable);
+    }
+
+    @PatchMapping("/{id}")
+    public UserDTO partialUpdate(@PathVariable Long id,
+            @RequestBody Map<String, Object> fields) {
+        return userService.partialUpdate(id, fields);
+    }
+}`},
+
+{title:"Exception Handling",level:"Intermediate",
+content:[
+{type:"h",text:"Global Exception Handling"},
+{type:"p",text:"@RestControllerAdvice provides a centralized place to handle all exceptions across all controllers. Avoids duplicating exception handling in every controller."},
+{type:"h",text:"Exception Hierarchy Design"},
+{type:"li",items:[
+["Create a base AppException with errorCode and HTTP status"],
+["Extend for specific cases: ResourceNotFoundException (404), ConflictException (409), BusinessRuleException (422)"],
+["Let Spring Security exceptions propagate naturally to the AuthenticationEntryPoint"],
+]},
+{type:"h",text:"RFC 7807 — ProblemDetail (Spring Boot 3)"},
+{type:"p",text:"Spring Boot 3 adds native support for RFC 7807 Problem Details via ProblemDetail and ErrorResponseException. Provides a standardized JSON error format with type, title, status, detail, instance fields."},
+],
+interview:["@ExceptionHandler vs @ControllerAdvice vs ResponseEntityExceptionHandler?","How do you return consistent error responses across the whole API?","What is RFC 7807 and how does Spring Boot 3 implement it?","How do you handle validation errors and return field-specific messages?","How do you prevent leaking stack traces to clients?"],
+code:`// Base exception
+public class AppException extends RuntimeException {
+    private final String errorCode;
+    private final HttpStatus status;
+    public AppException(String errorCode, String message, HttpStatus status) {
+        super(message); this.errorCode = errorCode; this.status = status;
+    }
+}
+
+public class ResourceNotFoundException extends AppException {
+    public ResourceNotFoundException(String resource, Object id) {
+        super("RESOURCE_NOT_FOUND", resource+" not found: "+id, HttpStatus.NOT_FOUND);
+    }
+}
+
+// Standard error response
+public record ErrorResponse(
+    String code, String message, Instant timestamp,
+    String path, Map<String, String> fieldErrors) {}
+
+@RestControllerAdvice
+@Slf4j
+public class GlobalExceptionHandler
+        extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(AppException.class)
+    public ResponseEntity<ErrorResponse> handleApp(
+            AppException ex, HttpServletRequest req) {
+        log.warn("App error [{}]: {}", ex.getErrorCode(), ex.getMessage());
+        return ResponseEntity.status(ex.getStatus())
+            .body(new ErrorResponse(ex.getErrorCode(), ex.getMessage(),
+                Instant.now(), req.getRequestURI(), null));
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex, HttpHeaders headers,
+            HttpStatusCode status, WebRequest request) {
+        Map<String, String> fieldErrors = ex.getBindingResult()
+            .getFieldErrors().stream()
+            .collect(Collectors.toMap(
+                FieldError::getField,
+                fe -> Objects.requireNonNullElse(fe.getDefaultMessage(), "")));
+        ErrorResponse body = new ErrorResponse("VALIDATION_FAILED",
+            "Request validation failed", Instant.now(),
+            ((ServletWebRequest)request).getRequest().getRequestURI(), fieldErrors);
+        return ResponseEntity.badRequest().body(body);
+    }
+}`}
+]},
+
+{id:"data",emoji:"🗄️",title:"Data & Persistence",color:"#7c3aed",rgb:"124,58,237",topics:[
+{title:"Spring Data JPA Deep Dive",level:"Intermediate",
+content:[
+{type:"h",text:"Repository Hierarchy"},
+{type:"li",items:[
+["**Repository<T,ID>** — marker interface"],
+["**CrudRepository** — basic CRUD (save, findById, delete, count)"],
+["**PagingAndSortingRepository** — adds pagination and sorting"],
+["**JpaRepository** — adds flush, saveAll, deleteInBatch, getReferenceById"],
+]},
+{type:"h",text:"Query Strategies"},
+{type:"li",items:[
+["**Derived queries** — findByEmailAndStatus(String, Status) — Spring parses method name"],
+["**@Query JPQL** — @Query(\"SELECT u FROM User u WHERE u.email = :email\")"],
+["**@Query native** — nativeQuery=true for complex SQL that JPQL can't express"],
+["**Specifications** — dynamic, composable where clauses using JPA Criteria API"],
+["**QueryDSL** — type-safe query DSL, great for dynamic queries"],
+]},
+{type:"h",text:"The N+1 Problem — CRITICAL"},
+{type:"p",text:"When fetching N entities, accessing a LAZY collection on each triggers N additional queries. The fix: use JOIN FETCH in JPQL, @EntityGraph, or Hibernate batch fetching (hibernate.default_batch_fetch_size=25)."},
+{type:"h",text:"Transactions"},
+{type:"li",items:[
+["Always put @Transactional on SERVICE layer, not repository"],
+["**REQUIRED** (default) — join existing tx or create new"],
+["**REQUIRES_NEW** — always create new tx, suspend current"],
+["**NESTED** — creates savepoint within current tx"],
+["Mark read-only methods with @Transactional(readOnly=true) — Hibernate flush mode = NEVER, better performance"],
+]},
+],
+interview:["Explain the N+1 problem with an example and all solutions","What is @EntityGraph? When would you use it vs JOIN FETCH?","Explain @Transactional propagation types with real examples","What is optimistic vs pessimistic locking?","What is dirty checking in Hibernate?","Why should @Transactional be on the service, not the repository?","What is the difference between EntityManager.persist() and save()?","What happens with @Transactional on a private method?"],
+code:`@Entity
+@Table(name="orders", indexes={
+    @Index(name="idx_user_status", columnList="user_id,status"),
+    @Index(name="idx_created", columnList="created_at DESC")
+})
+public class Order {
+    @Id @GeneratedValue(strategy=IDENTITY) private Long id;
+
+    @ManyToOne(fetch=LAZY) @JoinColumn(name="user_id")
+    private User user;
+
+    @OneToMany(mappedBy="order", cascade=ALL, orphanRemoval=true, fetch=LAZY)
+    private List<OrderItem> items = new ArrayList<>();
+
+    @Version private Long version; // Optimistic locking
+    @CreatedDate private Instant createdAt;
+    @Enumerated(STRING) private OrderStatus status;
+}
+
+public interface OrderRepository extends JpaRepository<Order, Long> {
+
+    // PROBLEM: N+1 if items is LAZY
+    List<Order> findByUserId(Long userId);
+
+    // SOLUTION 1: JOIN FETCH
+    @Query("SELECT DISTINCT o FROM Order o JOIN FETCH o.items WHERE o.userId=:id")
+    List<Order> findByUserIdWithItems(@Param("id") Long userId);
+
+    // SOLUTION 2: @EntityGraph
+    @EntityGraph(attributePaths={"items","items.product"})
+    List<Order> findByStatus(OrderStatus status);
+
+    // Projections — fetch only what you need
+    @Query("SELECT o.id AS id, o.status AS status, COUNT(oi) AS itemCount " +
+           "FROM Order o LEFT JOIN o.items oi GROUP BY o.id, o.status")
+    List<OrderSummary> findOrderSummaries();
+}
+
+// Pessimistic locking
+@Query("SELECT p FROM Product p WHERE p.id=:id")
+@Lock(LockModeType.PESSIMISTIC_WRITE)
+Optional<Product> findByIdForUpdate(@Param("id") Long id);`},
+
+{title:"Redis Caching",level:"Advanced",
+content:[
+{type:"h",text:"Spring Cache Abstraction"},
+{type:"li",items:[
+["**@Cacheable** — check cache first, execute method on miss, cache result"],
+["**@CachePut** — ALWAYS execute method, update cache (use for writes)"],
+["**@CacheEvict** — remove from cache (allEntries=true to clear entire cache)"],
+["**@Caching** — combine multiple cache operations on one method"],
+]},
+{type:"h",text:"Cache Strategies"},
+{type:"li",items:[
+["**Cache-Aside** — app checks cache, on miss loads from DB; most common pattern"],
+["**Write-Through** — write to cache and DB atomically"],
+["**Write-Behind** — write to cache, async flush to DB (risk of data loss)"],
+["**Read-Through** — cache handles misses transparently (implemented by provider)"],
+]},
+{type:"h",text:"Cache Stampede Prevention"},
+{type:"p",text:"When a popular cache key expires, many requests simultaneously hit the DB. Solutions: use probabilistic early expiration, acquire a lock before DB fetch (Redis SETNX), use Caffeine's async loading cache."},
+],
+interview:["How does @Cacheable work internally — step by step?","What is cache stampede and how do you prevent it?","When would you choose Redis over Caffeine (local cache)?","How do you handle cache invalidation in microservices?","@Cacheable vs @CachePut — when to use each?","How do you test code that uses caching?","What is a distributed cache and what consistency trade-offs exist?"],
+code:`@Configuration @EnableCaching
+public class CacheConfig {
+    @Bean
+    public RedisCacheManager cacheManager(RedisConnectionFactory cf) {
+        RedisCacheConfiguration defaults = RedisCacheConfiguration
+            .defaultCacheConfig()
+            .entryTtl(Duration.ofMinutes(60))
+            .disableCachingNullValues()
+            .serializeValuesWith(fromSerializer(
+                new GenericJackson2JsonRedisSerializer()));
+
+        return RedisCacheManager.builder(cf)
+            .cacheDefaults(defaults)
+            .withCacheConfiguration("users",
+                defaults.entryTtl(Duration.ofMinutes(10)))
+            .withCacheConfiguration("products",
+                defaults.entryTtl(Duration.ofHours(6)))
+            .transactionAware() // sync with @Transactional
+            .build();
+    }
+}
+
+@Service
+@Transactional(readOnly=true)
+public class ProductService {
+
+    @Cacheable(value="products", key="#id", unless="#result==null")
+    public ProductDTO getProduct(Long id) { ... }
+
+    @CachePut(value="products", key="#result.id")
+    @Transactional
+    public ProductDTO updateProduct(Long id, UpdateRequest req) { ... }
+
+    @Caching(evict={
+        @CacheEvict(value="products", key="#id"),
+        @CacheEvict(value="product-list", allEntries=true)
+    })
+    @Transactional
+    public void deleteProduct(Long id) { ... }
+}`}
+]},
+
+{id:"security",emoji:"🔒",title:"Security",color:"#dc2626",rgb:"220,38,38",topics:[
+{title:"Spring Security & JWT",level:"Advanced",
+content:[
+{type:"h",text:"Spring Security Filter Chain"},
+{type:"p",text:"Every HTTP request passes through a series of filters. Key filters in order: SecurityContextPersistenceFilter → CorsFilter → CsrfFilter → [your JWT filter] → UsernamePasswordAuthenticationFilter → ExceptionTranslationFilter → FilterSecurityInterceptor (AuthorizationFilter in Spring 6)."},
+{type:"h",text:"JWT Architecture"},
+{type:"li",items:[
+["**Access Token** — short-lived (15min), stateless, sent in Authorization header"],
+["**Refresh Token** — long-lived (7 days), stored in HttpOnly cookie (not localStorage!), used to issue new access tokens"],
+["**Token Rotation** — every refresh invalidates old refresh token and issues new one (prevents replay attacks)"],
+["**Token Revocation** — store revoked JTI (JWT ID) in Redis with TTL equal to token expiry"],
+]},
+{type:"h",text:"CSRF"},
+{type:"p",text:"CSRF attacks are irrelevant for stateless JWT-based APIs (no cookies carry credentials). Disable CSRF when using JWT. Enable CSRF when using session-based auth with cookies."},
+],
+interview:["How does the Spring Security filter chain work?","JWT vs session-based auth — trade-offs?","How do you implement JWT refresh token rotation?","How do you revoke a JWT before it expires?","@PreAuthorize vs @Secured vs @RolesAllowed?","How do you secure service-to-service calls in microservices?","What is CSRF and when should you enable/disable it?","How does OAuth2 Authorization Code Flow work?"],
+code:`// Spring Security 6 / Spring Boot 3
+@Configuration @EnableWebSecurity @EnableMethodSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain chain(HttpSecurity http,
+            JwtAuthFilter jwtFilter) throws Exception {
+        return http
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsSource()))
+            .sessionManagement(s ->
+                s.sessionCreationPolicy(STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**",
+                    "/actuator/health", "/v3/api-docs/**").permitAll()
+                .requestMatchers(GET, "/api/products/**").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated())
+            .addFilterBefore(jwtFilter,
+                UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint(
+                    (req, res, e) -> res.sendError(401))
+                .accessDeniedHandler(
+                    (req, res, e) -> res.sendError(403)))
+            .build();
+    }
+}
+
+// Method security
+@Service
+public class DocumentService {
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.id")
+    public Document getDocument(Long docId, Long userId) { ... }
+
+    @PostAuthorize("returnObject.owner == authentication.name")
+    public Document findById(Long id) { ... }
+
+    @PreAuthorize("hasAuthority('DOCUMENT_WRITE')")
+    public Document create(CreateDocRequest req) { ... }
+}`}
+]},
+
+{id:"microservices",emoji:"🏗️",title:"Microservices",color:"#059669",rgb:"5,150,105",topics:[
+{title:"Microservices Patterns",level:"Advanced",
+content:[
+{type:"h",text:"Core Communication Patterns"},
+{type:"li",items:[
+["**Synchronous** (REST/gRPC) — simple, but tight coupling; caller blocks waiting for response"],
+["**Asynchronous** (Kafka/RabbitMQ) — loose coupling, better resilience, but eventual consistency"],
+]},
+{type:"h",text:"Resilience Patterns"},
+{type:"li",items:[
+["**Circuit Breaker** — CLOSED (normal) → OPEN (tripping after N failures) → HALF-OPEN (testing recovery). Prevents cascade failures."],
+["**Retry** — with exponential backoff + jitter. Never retry without backoff."],
+["**Bulkhead** — isolate thread pools per downstream service. One slow service doesn't exhaust all threads."],
+["**Timeout** — always set connection AND read timeouts. Never use default infinite timeouts."],
+]},
+{type:"h",text:"Distributed Transaction Patterns"},
+{type:"li",items:[
+["**Saga** — sequence of local transactions. Choreography (event-driven) vs Orchestration (central coordinator)"],
+["**Outbox Pattern** — write business data AND event to DB atomically; separate poller publishes event to Kafka. Solves dual-write problem."],
+["**Two-Phase Commit (2PC)** — avoid in microservices; causes tight coupling and reduces availability"],
+]},
+],
+interview:["How do you handle distributed transactions in microservices?","Explain Circuit Breaker states and transitions","Saga choreography vs orchestration — pros/cons?","What is the Outbox Pattern and why is it needed?","How do you ensure exactly-once processing in Kafka?","What is a dead letter queue?","How do you do distributed tracing?","Service mesh vs API Gateway — when to use each?"],
+code:`// Circuit Breaker with Resilience4j
+@Service
+public class PaymentService {
+
+    @CircuitBreaker(name="payment", fallbackMethod="paymentFallback")
+    @Retry(name="payment")
+    @TimeLimiter(name="payment")
+    public CompletableFuture<PaymentResponse> processPayment(
+            PaymentRequest req) {
+        return CompletableFuture.supplyAsync(() ->
+            paymentClient.process(req));
+    }
+
+    public CompletableFuture<PaymentResponse> paymentFallback(
+            PaymentRequest req, Exception ex) {
+        log.warn("Payment CB open, using fallback: {}", ex.getMessage());
+        return CompletableFuture.completedFuture(
+            PaymentResponse.deferred(req.getOrderId()));
+    }
+}
+
+// Outbox Pattern — atomically save + publish
+@Service @Transactional
+public class OrderService {
+    public Order createOrder(CreateOrderRequest req) {
+        Order order = orderRepo.save(Order.from(req));
+
+        // Same transaction — guaranteed atomic
+        OutboxEvent event = OutboxEvent.builder()
+            .aggregateId(order.getId().toString())
+            .aggregateType("Order").eventType("OrderCreated")
+            .payload(mapper.toJson(order))
+            .status(PENDING).build();
+        outboxRepo.save(event);
+        return order;
+        // Outbox Poller (separate service) reads PENDING events,
+        // publishes to Kafka, marks as PROCESSED
+    }
+}`},
+
+{title:"Observability & Actuator",level:"Intermediate",
+content:[
+{type:"h",text:"Three Pillars of Observability"},
+{type:"li",items:[
+["**Metrics** — quantitative measurements over time. Micrometer → Prometheus → Grafana"],
+["**Logs** — discrete events with context. Logback/Log4j2 → ELK Stack or Grafana Loki"],
+["**Traces** — request journey across services. Micrometer Tracing + Zipkin/Jaeger"],
+]},
+{type:"h",text:"Key Actuator Endpoints"},
+{type:"li",items:[
+["**/health** — up/down status with component details"],
+["**/health/liveness** — is process alive? (K8s liveness probe)"],
+["**/health/readiness** — is app ready to serve traffic? (K8s readiness probe)"],
+["**/metrics** — Micrometer metrics"],
+["**/loggers** — view AND change log levels at runtime (no restart!)"],
+["**/threaddump** — all thread states"],
+["**/env** — all environment properties (redacts sensitive values)"],
+]},
+],
+interview:["How do you expose only specific Actuator endpoints?","What is Micrometer and what problem does it solve?","Difference between liveness and readiness health probes?","How do you implement distributed tracing with Spring Boot?","How do you create a custom HealthIndicator?","How do you change a log level in production without restart?"],
+code:`// application.yml
+// management:
+//   endpoints.web.exposure.include: health,metrics,info,loggers
+//   endpoint.health:
+//     show-details: when-authorized
+//     probes.enabled: true
+
+@Component
+public class ExternalApiHealthIndicator implements HealthIndicator {
+    private final PaymentGatewayClient client;
+
+    @Override
+    public Health health() {
+        try {
+            ResponseTime rt = client.ping();
+            return Health.up()
+                .withDetail("payment-gateway", "UP")
+                .withDetail("response-time-ms", rt.millis())
+                .build();
+        } catch (Exception e) {
+            return Health.down(e)
+                .withDetail("payment-gateway", "UNREACHABLE").build();
+        }
+    }
+}
+
+@Service
+public class OrderService {
+    private final Counter orderCounter;
+    private final Timer orderTimer;
+    private final DistributionSummary orderValueSummary;
+
+    public OrderService(MeterRegistry registry) {
+        this.orderCounter = Counter.builder("orders.total")
+            .tag("type", "created").register(registry);
+        this.orderTimer = Timer.builder("orders.processing")
+            .publishPercentiles(0.5, 0.95, 0.99)
+            .register(registry);
+        this.orderValueSummary = DistributionSummary
+            .builder("orders.value").baseUnit("USD").register(registry);
+    }
+}`}
+]},
+
+{id:"advanced",emoji:"🚀",title:"Advanced Topics",color:"#d97706",rgb:"217,119,6",topics:[
+{title:"AOP — Aspect Oriented Programming",level:"Advanced",
+content:[
+{type:"h",text:"Core Concepts"},
+{type:"li",items:[
+["**Aspect** — module encapsulating a cross-cutting concern (logging, security, metrics)"],
+["**Join Point** — point in execution (always a method call in Spring AOP)"],
+["**Pointcut** — expression selecting which join points to intercept"],
+["**Advice** — action to take at a join point (Before, After, Around, etc.)"],
+["**Weaving** — applying aspects to target objects (Spring uses proxy-based weaving at runtime)"],
+]},
+{type:"h",text:"Spring AOP vs AspectJ"},
+{type:"li",items:[
+["**Spring AOP** — proxy-based; only intercepts public methods on Spring-managed beans"],
+["**AspectJ** — full bytecode weaving; intercepts any method, constructor, field access"],
+["Spring AOP cannot intercept: private methods, self-invocations (this.method()), non-Spring beans"],
+]},
+{type:"h",text:"JDK Proxy vs CGLIB"},
+{type:"li",items:[
+["**JDK Dynamic Proxy** — requires target to implement an interface"],
+["**CGLIB** — subclasses the target class; used when no interface (Spring Boot default for @Configuration)"],
+]},
+],
+interview:["How does Spring AOP work under the hood?","Why can't you intercept private methods or self-invocations with Spring AOP?","JDK Dynamic Proxy vs CGLIB — when does Spring use each?","What is @Around advice and how does ProceedingJoinPoint work?","AOP vs Interceptors vs Filters — when to use each?","What are practical production use cases for AOP?"],
+code:`@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Auditable { String action(); }
+
+@Aspect @Component @Slf4j
+public class AuditAspect {
+
+    // Pointcut combining annotation and service layer
+    @Pointcut("@annotation(auditable)")
+    public void auditableMethods(Auditable auditable) {}
+
+    @Around("auditableMethods(auditable)")
+    public Object audit(ProceedingJoinPoint pjp, Auditable auditable)
+            throws Throwable {
+        String user = SecurityContextHolder.getContext()
+            .getAuthentication().getName();
+        StopWatch sw = new StopWatch(); sw.start();
+        try {
+            Object result = pjp.proceed();
+            sw.stop();
+            auditService.log(AuditEvent.success(
+                auditable.action(), user, pjp.getArgs(),
+                sw.getTotalTimeMillis()));
+            return result;
+        } catch (Exception ex) {
+            sw.stop();
+            auditService.log(AuditEvent.failure(
+                auditable.action(), user, ex.getMessage(),
+                sw.getTotalTimeMillis()));
+            throw ex;
+        }
+    }
+}
+
+// Usage
+@Service
+public class UserService {
+    @Auditable(action = "USER_ROLE_CHANGE")
+    public void changeRole(Long userId, Role newRole) { ... }
+}`},
+
+{title:"Performance & Virtual Threads",level:"Advanced",
+content:[
+{type:"h",text:"Performance Optimization Areas"},
+{type:"li",items:[
+["**Database** — indexes, N+1, connection pool tuning (HikariCP), projections, read replicas"],
+["**Caching** — Redis for distributed cache, Caffeine for local L1 cache, two-level caching"],
+["**Async** — @Async, CompletableFuture, WebFlux for reactive; don't block threads on I/O"],
+["**JVM** — heap sizing, GC selection (G1GC vs ZGC), GraalVM native image"],
+]},
+{type:"h",text:"Virtual Threads (Java 21 + Spring Boot 3.2)"},
+{type:"p",text:"Virtual threads are lightweight threads managed by the JVM (not OS). Millions can exist simultaneously. Thread-per-request model becomes viable for I/O-heavy workloads without reactive programming complexity. Enable with spring.threads.virtual.enabled=true."},
+{type:"h",text:"HikariCP Tuning"},
+{type:"li",items:[
+["**maximumPoolSize** — usually = (CPU cores × 2) + effective spindle count. Default 10."],
+["**minimumIdle** — set equal to maximumPoolSize for stable throughput"],
+["**connectionTimeout** — max time to wait for connection from pool (default 30s, consider 5s)"],
+["**idleTimeout** — how long idle connection stays in pool"],
+]},
+],
+interview:["How do you diagnose a slow API endpoint in production?","What is connection pool exhaustion and how do you fix it?","When would you use @Async vs reactive WebFlux?","How do virtual threads differ from platform threads?","What is the impact of spring.threads.virtual.enabled=true?","How do you profile a Spring Boot app (JFR, async-profiler)?","What is GraalVM native image and its limitations with Spring?"],
+code:`// Virtual threads (Spring Boot 3.2+)
+// application.properties: spring.threads.virtual.enabled=true
+// That's it! Spring auto-configures Tomcat and @Async executor
+
+// Manual virtual thread executor
+@Bean
+public Executor virtualThreadExecutor() {
+    return Executors.newVirtualThreadPerTaskExecutor();
+}
+
+// Async fan-out with CompletableFuture
+@Service
+public class DashboardService {
+
+    @Async
+    public CompletableFuture<UserStats> getUserStats(Long userId) {
+        return CompletableFuture.completedFuture(statsRepo.find(userId));
+    }
+
+    public DashboardData getDashboard(Long userId) {
+        var statsFuture = getUserStats(userId);
+        var ordersFuture = CompletableFuture.supplyAsync(
+            () -> orderService.getRecent(userId, 10));
+        var notifFuture = CompletableFuture.supplyAsync(
+            () -> notifService.getUnread(userId));
+
+        return CompletableFuture.allOf(statsFuture, ordersFuture, notifFuture)
+            .thenApply(v -> new DashboardData(
+                statsFuture.join(),
+                ordersFuture.join(),
+                notifFuture.join()))
+            .join();
+    }
+}
+
+// HikariCP config
+// spring.datasource.hikari.maximum-pool-size=20
+// spring.datasource.hikari.minimum-idle=20
+// spring.datasource.hikari.connection-timeout=5000
+// spring.datasource.hikari.validation-timeout=1000`}
+]},
+
+{id:"testing",emoji:"🧪",title:"Testing",color:"#0891b2",rgb:"8,145,178",topics:[
+{title:"Testing Strategy",level:"Intermediate",
+content:[
+{type:"h",text:"Testing Pyramid"},
+{type:"li",items:[
+["**Unit Tests** (70%) — @ExtendWith(MockitoExtension.class), mock all dependencies, fast (<1ms), test one class"],
+["**Integration Tests** (20%) — @SpringBootTest or slice tests, real Spring context, test component interactions"],
+["**E2E Tests** (10%) — test full system, slow, fragile, run in CI only"],
+]},
+{type:"h",text:"Spring Test Slices — Load Only What You Need"},
+{type:"li",items:[
+["**@WebMvcTest** — loads Controller + MockMvc + Security; mocks Service layer"],
+["**@DataJpaTest** — loads Repository + JPA + in-memory DB; no Controller/Service"],
+["**@JsonTest** — tests JSON serialization/deserialization"],
+["**@RestClientTest** — tests RestTemplate / WebClient code"],
+]},
+{type:"h",text:"TestContainers"},
+{type:"p",text:"Spins up real Docker containers (PostgreSQL, Redis, Kafka, etc.) for integration tests. Eliminates differences between H2 and real PostgreSQL. Use @Testcontainers + @Container. Reuse containers across tests with .withReuse(true) for speed."},
+],
+interview:["@MockBean vs @Mock — key difference?","How do you test a JWT-secured endpoint?","How do you test async @Async methods?","What is TestContainers and when is it worth the complexity?","How do you test Kafka consumers in Spring Boot?","What is Contract Testing (Spring Cloud Contract / Pact)?","@SpringBootTest vs @WebMvcTest — when to use which?","How do you prevent test pollution in @DataJpaTest?"],
+code:`// Unit Test
+@ExtendWith(MockitoExtension.class)
+class OrderServiceTest {
+    @Mock OrderRepository orderRepo;
+    @Mock PaymentService paymentService;
+    @InjectMocks OrderService sut; // system under test
+
+    @Test
+    void createOrder_validRequest_savesAndReturns() {
+        var req = new CreateOrderRequest(1L, List.of(item(1L, 2)));
+        var saved = Order.builder().id(1L).status(PENDING).build();
+        when(orderRepo.save(any())).thenReturn(saved);
+
+        var result = sut.createOrder(req);
+
+        assertThat(result.getId()).isEqualTo(1L);
+        verify(orderRepo).save(argThat(o -> o.getUserId().equals(1L)));
+    }
+}
+
+// Controller Slice Test
+@WebMvcTest(OrderController.class)
+@Import(SecurityConfig.class)
+class OrderControllerTest {
+    @Autowired MockMvc mvc;
+    @MockBean OrderService orderService;
+    @Autowired ObjectMapper om;
+
+    @Test
+    @WithMockUser(roles="USER")
+    void createOrder_valid_returns201() throws Exception {
+        var req = new CreateOrderRequest(1L, List.of());
+        var created = OrderDTO.builder().id(99L).build();
+        when(orderService.create(any())).thenReturn(created);
+
+        mvc.perform(post("/api/v1/orders")
+            .contentType(APPLICATION_JSON)
+            .content(om.writeValueAsString(req)))
+            .andExpect(status().isCreated())
+            .andExpect(header().exists("Location"))
+            .andExpect(jsonPath("$.id").value(99));
+    }
+}
+
+// TestContainers Integration
+@DataJpaTest
+@AutoConfigureTestDatabase(replace=NONE)
+@Testcontainers
+class OrderRepositoryIT {
+    @Container
+    static PostgreSQLContainer<?> pg =
+        new PostgreSQLContainer<>("postgres:16-alpine")
+            .withReuse(true);
+
+    @DynamicPropertySource
+    static void props(DynamicPropertyRegistry r) {
+        r.add("spring.datasource.url", pg::getJdbcUrl);
+        r.add("spring.datasource.username", pg::getUsername);
+        r.add("spring.datasource.password", pg::getPassword);
+    }
+
+    @Autowired OrderRepository repo;
+    // Tests run against REAL PostgreSQL
+}`}
+]}
+];
+
+// ============================================================
+// DATA: BIG4 QUESTIONS
+// ============================================================
+const big4Categories=[
+{id:"internals",label:"Spring Internals",icon:"⚙️",color:"#6366f1"},
+{id:"concurrency",label:"Concurrency & Threads",icon:"⚡",color:"#f59e0b"},
+{id:"jpa",label:"JPA & Database",icon:"🗄️",color:"#7c3aed"},
+{id:"patterns",label:"Design Patterns",icon:"🏗️",color:"#059669"},
+{id:"performance",label:"Performance",icon:"🚀",color:"#dc2626"},
+{id:"security",label:"Security Deep Dive",icon:"🔒",color:"#0891b2"},
+{id:"kafka",label:"Kafka & Messaging",icon:"📨",color:"#f97316"},
+{id:"tricky",label:"Tricky & Edge Cases",icon:"🧩",color:"#a855f7"},
+];
+
+const big4Questions=[
+{
+  cat:"internals",difficulty:"Expert",
+  q:"How does Spring AOP work internally — JDK Proxy vs CGLIB? What are the exact limitations?",
+  companies:["google","amazon","meta"],
+  tags:["AOP","Proxy","Internals"],
+  answer:`Spring AOP uses runtime proxy-based weaving — NOT bytecode instrumentation.`,
+  explanation:[
+    {label:"JDK Dynamic Proxy",text:"Used when the target bean implements at least one interface. Java creates a proxy object implementing the same interface(s). All method calls go through InvocationHandler which applies advice."},
+    {label:"CGLIB Proxy",text:"Used when the target class has NO interface OR when proxyTargetClass=true. CGLIB subclasses the target class at runtime and overrides methods to apply advice."},
+    {label:"Limitations",list:[
+      "Cannot intercept private methods (proxy can't override private)",
+      "Cannot intercept final methods or final classes (can't be subclassed/overridden)",
+      "Self-invocation doesn't go through proxy: if methodA() calls this.methodB(), the @Transactional/@Cacheable on methodB() is IGNORED",
+      "Only works on Spring-managed beans — calling new MyService() creates a raw object, not a proxy",
+    ]},
+    {label:"Self-Invocation Fix",text:"Inject ApplicationContext and get the bean proxy: applicationContext.getBean(MyService.class).methodB(). Or use AspectJ weaving (LTW/CTW) for full bytecode instrumentation."},
+  ],
+  code:`// PROBLEM: self-invocation bypasses proxy
+@Service
+public class OrderService {
+    @Transactional
+    public void createOrder(Order o) {
+        save(o); // calls this.save() — BYPASSES @Transactional proxy!
+    }
+
+    @Transactional(propagation=REQUIRES_NEW)
+    public void save(Order o) { // This @Transactional is IGNORED here
+        orderRepo.save(o);
+    }
+}
+
+// FIX 1: Inject self-proxy
+@Service
+public class OrderService {
+    @Autowired private OrderService self; // inject proxy, not 'this'
+
+    public void createOrder(Order o) {
+        self.save(o); // goes through proxy ✓
+    }
+}
+
+// FIX 2: Use ApplicationContext
+@Service
+public class OrderService implements ApplicationContextAware {
+    private ApplicationContext ctx;
+
+    public void createOrder(Order o) {
+        ctx.getBean(OrderService.class).save(o); // proxy ✓
+    }
+}`,
+  pitfall:"@Transactional on private methods silently does nothing. No warning is shown. This is a very common production bug.",
+  tip:"In Spring Boot 3 / Spring 6, @Transactional can be placed on interface methods (new feature). Enable AspectJ mode with @EnableTransactionManagement(mode=AspectJMode) for self-invocation support."
+},
+{
+  cat:"internals",difficulty:"Hard",
+  q:"What is ApplicationContext vs BeanFactory? When would you ever use BeanFactory directly?",
+  companies:["amazon","microsoft"],
+  tags:["Container","Internals","IoC"],
+  answer:"BeanFactory is the root interface for the Spring IoC container. ApplicationContext extends BeanFactory and adds enterprise features.",
+  explanation:[
+    {label:"BeanFactory",list:[
+      "Lazy initialization — beans created only when requested via getBean()",
+      "Basic DI and bean lifecycle",
+      "No event publishing, no AOP auto-proxy, no MessageSource, no WebApplicationContext",
+      "Lower memory footprint",
+    ]},
+    {label:"ApplicationContext",list:[
+      "Eager initialization of singletons at startup",
+      "Built-in support: MessageSource (i18n), ApplicationEvents, AOP auto-proxying, Environment abstraction",
+      "Implementations: ClassPathXmlApplicationContext, AnnotationConfigApplicationContext, WebApplicationContext",
+    ]},
+    {label:"When to use BeanFactory",text:"Almost never in application code. Possibly in extremely memory-constrained environments (IoT, edge). Spring Boot always uses AnnotationConfigApplicationContext internally."},
+  ],
+  code:`// You'd only use BeanFactory in edge cases like:
+DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
+XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
+reader.loadBeanDefinitions(new ClassPathResource("beans.xml"));
+
+// ApplicationContext is what you always use:
+ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
+MyService svc = ctx.getBean(MyService.class);`,
+  pitfall:"Using BeanFactory means no @EventListener, no ApplicationEventPublisher, no automatic BeanPostProcessor registration.",
+  tip:"ApplicationContext is always preferred. BeanFactory knowledge is useful for understanding Spring's internal architecture."
+},
+{
+  cat:"concurrency",difficulty:"Expert",
+  q:"A singleton Spring bean has an instance variable being modified by multiple threads. What's the problem and how do you fix it?",
+  companies:["google","amazon","meta","microsoft"],
+  tags:["Thread Safety","Singleton","Race Condition"],
+  answer:"Singleton beans are shared across all requests/threads. Mutable instance variables cause race conditions.",
+  explanation:[
+    {label:"The Problem",text:"Spring singleton means ONE instance in the ApplicationContext. If 100 concurrent requests arrive, all 100 threads share the same bean instance. If the bean has state (instance variables), you have a classic race condition."},
+    {label:"Solutions",list:[
+      "Make beans stateless — no instance variables that change per-request (preferred design)",
+      "Use local variables inside methods — local vars are on the stack, thread-safe",
+      "Use ThreadLocal — each thread has its own copy of the variable",
+      "Use AtomicReference, AtomicInteger, ConcurrentHashMap for shared mutable state",
+      "Use synchronized or ReentrantLock (with caution — hurts performance)",
+      "Use prototype scope — but this means a new instance per getBean() call",
+    ]},
+    {label:"Common Misuse",text:"SimpleDateFormat is NOT thread-safe. Using it as a singleton field causes incorrect date parsing under concurrency. Solution: use ThreadLocal<SimpleDateFormat> or java.time.DateTimeFormatter (which IS thread-safe)."},
+  ],
+  code:`// DANGEROUS — race condition!
+@Service
+public class UserService {
+    private User currentUser; // SHARED mutable state — BUG!
+
+    public void process(Long userId) {
+        currentUser = userRepo.findById(userId).orElseThrow();
+        doSomething(currentUser); // another thread may overwrite currentUser!
+    }
+}
+
+// FIX 1: Stateless (always preferred)
+@Service
+public class UserService {
+    public void process(Long userId) {
+        User user = userRepo.findById(userId).orElseThrow(); // local var
+        doSomething(user); // thread-safe ✓
+    }
+}
+
+// FIX 2: ThreadLocal for genuinely thread-scoped state
+@Component
+public class RequestContext {
+    private static final ThreadLocal<String> correlationId =
+        new ThreadLocal<>();
+
+    public static void set(String id) { correlationId.set(id); }
+    public static String get() { return correlationId.get(); }
+    public static void clear() { correlationId.remove(); } // CRITICAL!
+}`,
+  pitfall:"Forgetting ThreadLocal.remove() causes memory leaks in thread pool environments. Always clear in a finally block or via an interceptor.",
+  tip:"The best fix is stateless design. If you need request-scoped state, use @RequestScope or pass data as method parameters."
+},
+{
+  cat:"jpa",difficulty:"Expert",
+  q:"Explain the N+1 problem with a real example. What are ALL the ways to solve it and what are the trade-offs?",
+  companies:["google","amazon","meta","microsoft","uber","netflix"],
+  tags:["JPA","Hibernate","Performance","N+1"],
+  answer:"The N+1 problem occurs when fetching N entities with a LAZY association, each triggering a separate SQL query.",
+  explanation:[
+    {label:"The Problem",text:"You fetch 50 orders (1 query). Then access order.getItems() on each order (50 more queries). Total: 51 queries. With 1000 orders: 1001 queries. Performance degrades linearly."},
+    {label:"Solution 1: JOIN FETCH",text:"Single query with a SQL JOIN. Problem: Cartesian product with multiple collections causes duplicated parent rows. Fix with DISTINCT or Set. Cannot paginate on the JPQL side with multiple JOIN FETCHes."},
+    {label:"Solution 2: @EntityGraph",text:"Declarative JOIN FETCH. Works with Spring Data method names. Same Cartesian product limitation applies."},
+    {label:"Solution 3: Batch Fetching",text:"hibernate.default_batch_fetch_size=25 tells Hibernate to load LAZY associations in batches using SQL IN clause. No code changes needed. Best for pagination."},
+    {label:"Solution 4: Separate Queries",text:"Fetch parents, then fetch all children in one query WHERE parent_id IN (:ids). Manual but gives most control."},
+    {label:"Solution 5: Projections/DTOs",text:"Don't fetch entities at all. Use JPQL constructor expressions or interface projections to fetch only needed columns. Fastest option."},
+  ],
+  code:`// PROBLEM
+List<Order> orders = orderRepo.findAll(); // 1 query
+for (Order o : orders) {
+    System.out.println(o.getItems().size()); // N queries — BAD!
+}
+
+// SOLUTION 1: JOIN FETCH (careful with pagination)
+@Query("SELECT DISTINCT o FROM Order o JOIN FETCH o.items")
+List<Order> findAllWithItems();
+
+// SOLUTION 2: @EntityGraph
+@EntityGraph(attributePaths = {"items", "items.product"})
+List<Order> findByStatus(OrderStatus status);
+
+// SOLUTION 3: Batch size (in application.properties)
+// spring.jpa.properties.hibernate.default_batch_fetch_size=25
+// Hibernate generates: SELECT * FROM order_items WHERE order_id IN (?,?,?...)
+// No code changes needed — just config!
+
+// SOLUTION 4: Projection (most efficient for read-only views)
+@Query("""
+    SELECT new com.example.dto.OrderSummaryDTO(
+        o.id, o.status, u.email, COUNT(oi))
+    FROM Order o
+    JOIN o.user u
+    LEFT JOIN o.items oi
+    GROUP BY o.id, o.status, u.email
+    """)
+List<OrderSummaryDTO> findOrderSummaries();`,
+  pitfall:"Using JOIN FETCH with pagination (LIMIT/OFFSET) on the outer query causes Hibernate to fetch ALL records into memory and paginate in Java. You'll see the warning 'HHH90003004: firstResult/maxResults specified with collection fetch'. Fix: use batch size instead.",
+  tip:"Enable SQL logging (spring.jpa.show-sql=true + spring.jpa.properties.hibernate.format_sql=true) and always count your queries. Use p6spy for production-grade SQL tracing."
+},
+{
+  cat:"jpa",difficulty:"Hard",
+  q:"What is @Transactional self-invocation bug? A service method calls another @Transactional method on the same class — what happens?",
+  companies:["amazon","google","microsoft"],
+  tags:["Transaction","AOP","Proxy"],
+  answer:"The inner method's @Transactional annotation is completely ignored because self-invocation bypasses the proxy.",
+  explanation:[
+    {label:"Why It Happens",text:"@Transactional works via AOP proxy. When method A calls this.methodB(), it calls the real object directly, NOT through the Spring proxy. The proxy never sees the call, so no transaction handling occurs."},
+    {label:"Fix 1: Refactor",text:"Move methodB() to a separate @Service class. Cleaner design anyway."},
+    {label:"Fix 2: Self-inject the proxy",text:"Inject the bean itself via @Autowired (Spring handles circular ref). Call self.methodB() to go through the proxy."},
+    {label:"Fix 3: AspectJ Mode",text:"@EnableTransactionManagement(mode=AdviceMode.ASPECTJ) uses compile-time/load-time weaving, not proxies. Self-invocation works. Requires AspectJ dependency."},
+    {label:"@Transactional on private methods",text:"Silently ignored. No error. Most dangerous case."},
+  ],
+  code:`// BROKEN — inner @Transactional ignored!
+@Service
+public class OrderService {
+    @Transactional
+    public void processOrder(Long id) {
+        Order order = orderRepo.findById(id).orElseThrow();
+        notifyCustomer(order); // this.notifyCustomer() — bypasses proxy!
+    }
+
+    @Transactional(propagation = REQUIRES_NEW)  // IGNORED!
+    private void notifyCustomer(Order order) {
+        notifRepo.save(new Notification(order)); // runs in same tx as processOrder
+    }
+}
+
+// FIX: Separate class
+@Service
+public class OrderService {
+    private final NotificationService notificationService; // different bean
+
+    @Transactional
+    public void processOrder(Long id) {
+        Order order = orderRepo.findById(id).orElseThrow();
+        notificationService.notifyCustomer(order); // goes through proxy ✓
+    }
+}
+
+// FIX 2: Self-injection (use sparingly — indicates design issue)
+@Service
+public class OrderService {
+    @Lazy @Autowired private OrderService self;
+
+    @Transactional
+    public void processOrder(Long id) {
+        self.notifyCustomer(order); // through proxy ✓
+    }
+}`,
+  pitfall:"@Transactional(propagation=REQUIRES_NEW) on a self-invoked method — you expect a NEW transaction, but you're still in the original transaction. Data you expected to be in its own transaction participates in the parent, causing unexpected rollbacks.",
+  tip:"Code review red flag: if you see a @Transactional method calling another @Transactional method on 'this', it's almost certainly a bug."
+},
+{
+  cat:"patterns",difficulty:"Expert",
+  q:"Explain the Saga pattern. When would you choose choreography vs orchestration? What are the failure scenarios?",
+  companies:["amazon","uber","netflix","meta"],
+  tags:["Saga","Microservices","Distributed Transactions"],
+  answer:"Saga manages distributed transactions as a sequence of local transactions with compensating actions for failures.",
+  explanation:[
+    {label:"Choreography",text:"Services react to events. No central coordinator. OrderService publishes OrderCreated → InventoryService listens and reserves stock → publishes InventoryReserved → PaymentService charges card. Each service knows what events trigger it."},
+    {label:"Orchestration",text:"Central SagaOrchestrator drives the workflow. It explicitly calls each service and handles failures. Think of it as a state machine."},
+    {label:"Choreography Pros/Cons",list:[
+      "✅ Loose coupling, services don't know about each other",
+      "✅ Easy to add new steps (just subscribe to an event)",
+      "❌ Hard to track overall saga state — requires event correlation",
+      "❌ Hard to understand the flow — must read all services",
+      "❌ Risk of cyclic event dependencies",
+    ]},
+    {label:"Orchestration Pros/Cons",list:[
+      "✅ Clear visibility of saga state in one place",
+      "✅ Easier debugging and monitoring",
+      "❌ Orchestrator becomes a coupling point",
+      "❌ Risk of it becoming a 'god service'",
+    ]},
+    {label:"Compensating Transactions",text:"If step 3 fails, you must undo steps 1 and 2 by executing compensating transactions (not rollbacks — these are separate business operations). E.g., if payment fails, run 'release inventory' and 'cancel order'."},
+  ],
+  code:`// Orchestration with state machine
+@Service
+public class OrderSagaOrchestrator {
+    // State: STARTED → INVENTORY_RESERVED → PAYMENT_CHARGED → COMPLETED
+    //         or → INVENTORY_FAILED / PAYMENT_FAILED → COMPENSATING → CANCELLED
+
+    @Transactional
+    public void startSaga(Long orderId) {
+        SagaState saga = SagaState.start(orderId);
+        sagaRepo.save(saga);
+        inventoryService.reserve(orderId); // Step 1
+    }
+
+    @KafkaListener(topics = "inventory-reserved")
+    @Transactional
+    public void onInventoryReserved(InventoryReservedEvent e) {
+        SagaState saga = sagaRepo.findByOrderId(e.getOrderId());
+        saga.advance(INVENTORY_RESERVED);
+        sagaRepo.save(saga);
+        paymentService.charge(e.getOrderId()); // Step 2
+    }
+
+    @KafkaListener(topics = "payment-failed")
+    @Transactional
+    public void onPaymentFailed(PaymentFailedEvent e) {
+        SagaState saga = sagaRepo.findByOrderId(e.getOrderId());
+        saga.compensate();
+        // Run compensating transactions
+        inventoryService.releaseReservation(e.getOrderId()); // Undo step 1
+        orderService.cancelOrder(e.getOrderId());
+        sagaRepo.save(saga.withStatus(CANCELLED));
+    }
+}`,
+  pitfall:"Forgetting idempotency. Compensating transactions can be triggered multiple times (Kafka at-least-once delivery). Each step AND each compensation MUST be idempotent.",
+  tip:"Use the Outbox Pattern for event publishing in each saga step. Store saga state in its own table so you can reconstruct and resume failed sagas."
+},
+{
+  cat:"performance",difficulty:"Expert",
+  q:"In production, an API endpoint is suddenly taking 5+ seconds. Walk me through your complete debugging process.",
+  companies:["google","amazon","meta","netflix","uber"],
+  tags:["Debugging","Performance","Production"],
+  answer:"Systematic diagnosis from symptoms to root cause — metrics, logs, traces, then profiling.",
+  explanation:[
+    {label:"Step 1: Triage with Metrics",list:[
+      "Check Grafana/Prometheus: CPU, memory, GC pauses, thread pool saturation, DB connection pool wait time",
+      "Check error rates, P95/P99 latency trends — is this gradual or sudden regression?",
+      "Check if all instances are affected or just one (node-specific issue?)",
+    ]},
+    {label:"Step 2: Distributed Traces",list:[
+      "Use Zipkin/Jaeger to find which span is slow",
+      "Is it DB query? External API call? Internal computation?",
+    ]},
+    {label:"Step 3: DB Investigation",list:[
+      "Run EXPLAIN ANALYZE on suspected queries",
+      "Check slow query log",
+      "Check pg_stat_activity for blocking locks",
+      "Check connection pool metrics — exhausted pool causes queuing",
+    ]},
+    {label:"Step 4: JVM Profiling",list:[
+      "Thread dump: look for BLOCKED threads, deadlocks, thread pool starvation",
+      "Heap dump: look for memory pressure causing GC pauses",
+      "async-profiler / JFR for CPU flame graphs",
+    ]},
+    {label:"Step 5: Recent Changes",list:[
+      "Did a deployment happen around the time of slowness?",
+      "Did data volume cross a threshold? (full table scan on now-large table)"],
+    },
+  ],
+  code:`// Common culprits and fixes
+
+// 1. Connection pool exhaustion
+// Symptom: requests queue waiting for DB connection
+// Diagnosis: hikaricp.connections.pending metric > 0
+// Fix: increase pool size or reduce query time
+
+// 2. Missing index
+@Query("SELECT u FROM User u WHERE u.email = :email")
+// EXPLAIN shows full table scan on 10M rows
+// Fix:
+@Table(indexes = @Index(columnList = "email", unique = true))
+
+// 3. Thread pool exhaustion (@Async tasks blocking)
+// Symptom: all async threads BLOCKED on external HTTP call
+// Fix: set proper timeout on RestTemplate/WebClient
+WebClient.builder()
+    .responseTimeout(Duration.ofSeconds(3))
+    .build();
+
+// 4. Accidental N+1 after code change
+// Diagnosis: p6spy shows 500+ queries for one request
+// Check git diff for removed @EntityGraph or changed fetch type
+
+// 5. Heap pressure / GC pauses
+// Diagnosis: GC log shows long STW pauses
+// Fix: tune heap, switch to ZGC for low-latency workloads
+// -XX:+UseZGC -Xmx4g -Xms4g`,
+  pitfall:"Jumping to conclusions without data. 'It must be the database' without checking metrics first wastes time. Always follow the data.",
+  tip:"Add a correlation ID (X-Request-ID) header to every request and log it in all services. Invaluable for tracing a slow request through microservices logs."
+},
+{
+  cat:"performance",difficulty:"Hard",
+  q:"Explain HikariCP connection pool tuning. What is connection pool exhaustion and how do you detect and prevent it?",
+  companies:["amazon","uber","netflix"],
+  tags:["HikariCP","Connection Pool","Performance"],
+  answer:"HikariCP is the default Spring Boot connection pool. Misconfiguration causes request queuing and timeouts under load.",
+  explanation:[
+    {label:"Key Parameters",list:[
+      "maximumPoolSize — max connections to DB. Formula: (core_count * 2) + effective_spindle_count. Too high can overwhelm DB.",
+      "minimumIdle — min idle connections. Set = maximumPoolSize for steady-state performance (avoids connection creation under load).",
+      "connectionTimeout — max time request waits for a connection from the pool (default: 30s). Set to 5s for fast-fail.",
+      "idleTimeout — how long idle connections are kept (default: 10min)",
+      "maxLifetime — max age of a connection (default: 30min). Set below DB's wait_timeout to avoid stale connections.",
+    ]},
+    {label:"Connection Pool Exhaustion",text:"All N connections are in use. New requests queue. After connectionTimeout, SQLTransientConnectionException is thrown. Causes: slow queries holding connections too long, N+1 queries, missing indexes, transaction left open."},
+    {label:"Detection",list:[
+      "hikaricp.connections.pending > 0 (Prometheus metric)",
+      "hikaricp.connections.active == maximumPoolSize continuously",
+      "SQLTransientConnectionException in logs: 'Connection is not available, request timed out'",
+    ]},
+  ],
+  code:`# application.properties
+spring.datasource.hikari.maximum-pool-size=20
+spring.datasource.hikari.minimum-idle=20
+spring.datasource.hikari.connection-timeout=5000    # 5s — fail fast
+spring.datasource.hikari.idle-timeout=600000        # 10min
+spring.datasource.hikari.max-lifetime=1740000       # 29min (< DB timeout)
+spring.datasource.hikari.validation-timeout=1000    # 1s to validate connection
+spring.datasource.hikari.leak-detection-threshold=30000  # Warn if held > 30s
+
+# Monitoring (expose to Prometheus)
+management.metrics.enable.hikaricp=true
+
+// Detect connection leaks with leak detection
+// When a connection is held > leak-detection-threshold, Hikari logs a WARN
+// with the stack trace of where the connection was obtained
+
+// Always use try-with-resources or rely on Spring's @Transactional to close connections
+@Transactional(readOnly = true)
+public List<UserDTO> getUsers() {
+    // Spring opens connection, runs query, closes connection — automatic
+    return userRepo.findAll();
+    // ✓ connection returned to pool after method returns
+}`,
+  pitfall:"Setting maximumPoolSize too high (e.g., 100 connections per instance, 10 instances = 1000 connections to DB). PostgreSQL max_connections default is 100. You'll overwhelm the DB.",
+  tip:"PgBouncer is a connection pooler that sits between your app and PostgreSQL. Use it in production to multiplex thousands of app connections over a few DB connections."
+},
+{
+  cat:"security",difficulty:"Expert",
+  q:"JWT tokens are stateless — how do you implement immediate token revocation (logout, account disable)?",
+  companies:["google","meta","amazon","microsoft"],
+  tags:["JWT","Security","Token Revocation"],
+  answer:"JWTs cannot be invalidated server-side by design. Solutions require maintaining some server-side state.",
+  explanation:[
+    {label:"Why It's Hard",text:"JWT is stateless — the server issues it and never stores it. There's no way to 'cancel' a valid JWT. It's valid until it expires."},
+    {label:"Solution 1: Short Expiry + Refresh Tokens",text:"Access tokens expire in 5-15 minutes. On revocation, just block the refresh token (stored in DB/Redis). User's access lasts at most 15 minutes. Trade-off: not truly immediate."},
+    {label:"Solution 2: Token Blocklist (Denylist)",text:"Store revoked JTI (JWT ID claim) in Redis with TTL = token's remaining lifetime. On each request, check Redis. Fast O(1) lookup. Redis TTL auto-cleans entries. Trade-off: adds one Redis call per request."},
+    {label:"Solution 3: Token Versioning",text:"Store a token_version per user in DB/Redis. Include version in JWT. On revocation, increment user's version. Token validation checks JWT version == stored version. One revoke invalidates ALL tokens for that user."},
+    {label:"Solution 4: Short-lived Access + Opaque Refresh",text:"Use opaque (random) refresh tokens stored in DB. Short access token (5min JWT). Logout = delete refresh token from DB. Elegant and secure."},
+  ],
+  code:`// Solution: JWT Blocklist with Redis
+@Service
+public class TokenRevocationService {
+    private final RedisTemplate<String, String> redis;
+
+    private static final String BLOCKLIST_PREFIX = "jwt:blocklist:";
+
+    public void revokeToken(String token) {
+        Claims claims = jwtService.parseClaims(token);
+        String jti = claims.getId();
+        long expiresIn = claims.getExpiration().getTime()
+            - System.currentTimeMillis();
+
+        if (expiresIn > 0) {
+            redis.opsForValue().set(
+                BLOCKLIST_PREFIX + jti,
+                "revoked",
+                Duration.ofMillis(expiresIn)
+            );
+        }
+    }
+
+    public boolean isRevoked(String token) {
+        String jti = jwtService.parseClaims(token).getId();
+        return redis.hasKey(BLOCKLIST_PREFIX + jti);
+    }
+}
+
+// In JwtAuthFilter, add check:
+if (tokenRevocationService.isRevoked(token)) {
+    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token revoked");
+    return;
+}
+
+// Solution: Token versioning (revokes ALL user tokens)
+@Entity
+public class User {
+    @Column(nullable=false)
+    private int tokenVersion = 0; // Increment to invalidate all tokens
+}
+
+// In JWT claims: add "ver": user.getTokenVersion()
+// In validation: check jwt.ver == userRepo.findTokenVersion(userId)`,
+  pitfall:"Storing JWT in localStorage makes it vulnerable to XSS. Prefer HttpOnly cookies (immune to XSS) for refresh tokens, memory/state for access tokens.",
+  tip:"Always include a jti (JWT ID) claim — a unique UUID per token. This is required for blocklist-based revocation."
+},
+{
+  cat:"kafka",difficulty:"Expert",
+  q:"How do you guarantee exactly-once processing in Kafka with Spring? What is idempotent processing vs exactly-once semantics?",
+  companies:["uber","netflix","amazon","meta"],
+  tags:["Kafka","Exactly-Once","Idempotency"],
+  answer:"Exactly-once is hard. Understand the difference between idempotent consumers and true exactly-once transactions.",
+  explanation:[
+    {label:"Delivery Semantics",list:[
+      "At-most-once: message may be lost, never duplicated (auto-commit before processing)",
+      "At-least-once: message never lost, may be duplicated (commit after processing) — default",
+      "Exactly-once: processed exactly once — hardest to achieve",
+    ]},
+    {label:"Idempotent Consumer (most practical)",text:"Process a message multiple times with the same outcome. Store a processed message ID (or event ID) in DB. Check before processing. This is simpler and works across restarts and rebalances."},
+    {label:"Kafka Transactions (true EOS)",text:"Producer uses transactional.id + enable.idempotence=true. Consumer uses isolation.level=read_committed. For Kafka-to-Kafka processing, Kafka Streams or manual transactional producer gives EOS. For Kafka-to-DB, you need the Outbox pattern or two-phase approach."},
+    {label:"Spring Kafka EOS Support",text:"spring.kafka.producer.transaction-id-prefix enables transactions. @Transactional on listener methods attempts to coordinate Kafka + DB transactions."},
+  ],
+  code:`// Idempotent consumer (most robust in practice)
+@KafkaListener(topics = "order-created", groupId = "payment-service")
+@Transactional
+public void processOrder(OrderCreatedEvent event) {
+    // Check if already processed (idempotency key = event ID)
+    if (processedEventRepo.existsById(event.getEventId())) {
+        log.info("Duplicate event, skipping: {}", event.getEventId());
+        return;
+    }
+
+    // Process the business logic
+    paymentService.charge(event.getOrderId(), event.getAmount());
+
+    // Mark as processed in SAME transaction
+    processedEventRepo.save(new ProcessedEvent(
+        event.getEventId(), Instant.now()));
+    // If DB tx rolls back, processed_events record also rolls back
+    // → next retry will reprocess correctly
+}
+
+// Kafka Transactions (Kafka-to-Kafka EOS)
+@Bean
+public KafkaTransactionManager<?, ?> kafkaTransactionManager(
+        ProducerFactory<?, ?> pf) {
+    return new KafkaTransactionManager<>(pf);
+}
+
+@KafkaListener(topics = "orders")
+@Transactional("kafkaTransactionManager")
+public void process(ConsumerRecord<String, OrderEvent> record) {
+    // Read committed isolation
+    OrderEvent transformed = transform(record.value());
+    kafkaTemplate.send("processed-orders", transformed);
+    // Both consume-ack and produce happen atomically
+}
+
+# application.properties
+spring.kafka.producer.transaction-id-prefix=payment-svc-tx-
+spring.kafka.consumer.isolation-level=read_committed`,
+  pitfall:"Relying on Kafka's EOS alone for Kafka-to-DB scenarios. If DB commit succeeds but Kafka commit fails, you get duplicates. Use idempotent consumers for Kafka-to-DB.",
+  tip:"The most battle-tested approach: at-least-once delivery + idempotent processing. True EOS adds significant complexity and latency."
+},
+{
+  cat:"tricky",difficulty:"Expert",
+  q:"Spring Boot loads a list of beans with @Order. But the order isn't working as expected. What could be wrong?",
+  companies:["google","amazon"],
+  tags:["@Order","Bean Ordering","Tricky"],
+  answer:"@Order affects injection order for List/Array injection and some specific Spring mechanisms, but NOT general bean initialization order.",
+  explanation:[
+    {label:"What @Order Does",list:[
+      "Controls order when injecting List<MyInterface> — lower value = earlier in list",
+      "Controls order of Spring Security filters",
+      "Controls order of @EventListener methods",
+      "Controls order of CommandLineRunner and ApplicationRunner beans",
+    ]},
+    {label:"What @Order Does NOT Do",list:[
+      "Does NOT control bean initialization order (use @DependsOn for that)",
+      "Does NOT work with Set injection (Sets are unordered)",
+      "Does NOT work if you're not injecting a collection — direct @Autowired of a single bean ignores @Order",
+    ]},
+    {label:"Alternatives",list:[
+      "@DependsOn(\"otherBean\") — ensures otherBean is initialized first",
+      "Implement Ordered interface — programmatic ordering",
+      "PriorityOrdered — processed before Ordered (used for framework-internal beans)",
+      "@Primary — picks default when multiple beans match type",
+    ]},
+  ],
+  code:`// @Order works when injecting a List:
+@Component @Order(1)
+public class FirstFilter implements RequestFilter {}
+
+@Component @Order(2)
+public class SecondFilter implements RequestFilter {}
+
+@Service
+public class FilterChain {
+    @Autowired
+    private List<RequestFilter> filters; // Will be [FirstFilter, SecondFilter]
+}
+
+// @Order does NOT control init order
+@Component @Order(1) // USELESS for controlling initialization!
+public class ServiceA {
+    @PostConstruct
+    public void init() { System.out.println("ServiceA init"); }
+}
+
+// USE @DependsOn instead:
+@Component
+@DependsOn("serviceB") // ServiceB initializes BEFORE ServiceA
+public class ServiceA { ... }
+
+// Programmatic ordering:
+@Component
+public class ThirdFilter implements RequestFilter, Ordered {
+    @Override
+    public int getOrder() { return 3; }
+}`,
+  pitfall:"Using @Order thinking it controls @PostConstruct execution order. It doesn't. This is a very common misunderstanding.",
+  tip:"Use @EventListener with @Order to sequence event handlers. The handler with the lowest order value runs first."
+},
+{
+  cat:"tricky",difficulty:"Expert",
+  q:"@Transactional(readOnly=true) — what exactly does it do at the Hibernate/DB level? Does it prevent writes?",
+  companies:["amazon","google","microsoft"],
+  tags:["Transaction","ReadOnly","Hibernate","Tricky"],
+  answer:"readOnly=true is a hint with multiple effects, but it does NOT prevent writes at the application level.",
+  explanation:[
+    {label:"Hibernate Effects",list:[
+      "Flush mode = NEVER/MANUAL — Hibernate won't auto-flush dirty entities to DB (no dirty checking)",
+      "Hibernate skips the dirty-checking algorithm — performance improvement on large object graphs",
+      "Entities loaded in read-only session don't register in first-level cache for modification tracking",
+    ]},
+    {label:"Database Effects",list:[
+      "Spring passes Connection.setReadOnly(true) hint to the JDBC driver",
+      "Some databases/drivers honor this to route to read replicas (PostgreSQL driver, MySQL driver)",
+      "Does NOT prevent a write SQL from executing if you explicitly call repo.save()",
+    ]},
+    {label:"Spring's AbstractPlatformTransactionManager",text:"Sets the transaction's readOnly flag, which can be used by: routing DataSource (to pick read replica), TransactionSynchronizationManager.isCurrentTransactionReadOnly() for conditional logic."},
+    {label:"Does it prevent writes?",text:"NO. You can still call repo.save() in a @Transactional(readOnly=true) method and the write will happen. It's a hint, not a guard. Use it for performance, not as a security measure."},
+  ],
+  code:`// What readOnly=true actually does:
+@Transactional(readOnly = true)
+public List<UserDTO> getUsers() {
+    List<User> users = userRepo.findAll();
+
+    // Hibernate won't dirty-check these users on flush
+    // Performance benefit: no need to compare state vs snapshot
+
+    // THIS STILL WORKS (readOnly is NOT a guard):
+    users.get(0).setName("MODIFIED"); // Dirty!
+    // But no flush will happen — change lost. Could be a bug!
+
+    return users.stream().map(mapper::toDTO).collect(toList());
+}
+
+// Read replica routing with readOnly hint
+@Bean
+@Primary
+public DataSource routingDataSource(
+        @Qualifier("primary") DataSource primary,
+        @Qualifier("replica") DataSource replica) {
+    return new AbstractRoutingDataSource() {
+        @Override
+        protected Object determineCurrentLookupKey() {
+            return TransactionSynchronizationManager
+                .isCurrentTransactionReadOnly() ? "replica" : "primary";
+        }
+    };
+}`,
+  pitfall:"Loading entities, modifying them, expecting changes NOT to persist because readOnly=true, but then calling an inner @Transactional (writable) method that flushes. Confusing behavior.",
+  tip:"Always use readOnly=true on read methods — performance benefits are real. But understand it's a hint, not a restriction. For true immutability, use projections or DTOs."
+},
+{
+  cat:"tricky",difficulty:"Hard",
+  q:"What is the difference between @Component, @Service, @Repository, and @Controller? Are they interchangeable?",
+  companies:["amazon","microsoft","google"],
+  tags:["Annotations","Stereotype","Tricky"],
+  answer:"They are all @Component specializations. Functionally equivalent for bean creation, but have specific semantic purposes and some behavioral differences.",
+  explanation:[
+    {label:"What they share",text:"All are @Component stereotypes. All trigger component scanning and create a Spring-managed singleton bean."},
+    {label:"@Repository",list:[
+      "Semantic: marks DAO/data access layer",
+      "Behavioral difference: enables Spring's persistence exception translation",
+      "PersistenceExceptionTranslationPostProcessor wraps SQLExceptions in Spring's DataAccessException hierarchy",
+      "Without @Repository, a JdbcTemplate exception might not be translated",
+    ]},
+    {label:"@Service",text:"Semantic: marks service/business logic layer. No additional behavior beyond @Component. But best practice to use it — Spring AOP pointcuts can target specific stereotypes."},
+    {label:"@Controller",list:[
+      "Semantic: marks MVC controller",
+      "Behavioral: Spring MVC scans for @RequestMapping on @Controller beans",
+      "@Component alone won't be recognized as a controller for request mapping",
+    ]},
+    {label:"@RestController",text:"@Controller + @ResponseBody. All handler methods automatically serialize return value to JSON."},
+  ],
+  code:`// @Repository enables exception translation
+@Repository
+public class UserJdbcRepository {
+    @Autowired JdbcTemplate jdbc;
+
+    public User findById(Long id) {
+        try {
+            return jdbc.queryForObject(...);
+        } catch (EmptyResultDataAccessException e) {
+            // Spring translates vendor SQL exceptions to this hierarchy
+            return null;
+        }
+        // Without @Repository, you'd get raw DataAccessException
+        // not properly translated from vendor-specific exceptions
+    }
+}
+
+// @Component wouldn't work here as a controller:
+@Component  // BAD for controllers
+@RequestMapping("/users")
+public class UserController {
+    @GetMapping  // This might not be mapped without @Controller/@RestController
+    public List<User> list() { return ...; }
+}
+
+// Correct:
+@RestController  // @Controller + @ResponseBody
+@RequestMapping("/api/v1/users")
+public class UserController { ... }
+
+// AOP targeting service layer specifically
+@Pointcut("within(@org.springframework.stereotype.Service *)")
+public void serviceLayer() {}  // Only matches @Service, not @Component`,
+  pitfall:"Using @Component for JPA repositories instead of @Repository — exception translation won't work, and you'll get vendor-specific exceptions leaking through your service layer.",
+  tip:"Use the most specific stereotype annotation always. It communicates intent, enables layer-specific AOP pointcuts, and activates behavioral differences."
+},
+{
+  cat:"concurrency",difficulty:"Expert",
+  q:"How do you implement optimistic locking in JPA and what happens when a conflict occurs? How do you handle it?",
+  companies:["amazon","google","meta","netflix"],
+  tags:["Optimistic Locking","JPA","Concurrency"],
+  answer:"Optimistic locking assumes conflicts are rare. It uses a version field to detect concurrent modifications without locking DB rows.",
+  explanation:[
+    {label:"How It Works",text:"Entity has @Version field (Long or Integer). On UPDATE, Hibernate adds WHERE version = {current_version} to SQL. If another transaction updated the row first, version changed, the WHERE clause matches 0 rows → OptimisticLockException thrown."},
+    {label:"When to Use",text:"High-read, low-conflict scenarios. Multiple users editing the same record concurrently. E-commerce product updates, user profile changes."},
+    {label:"When NOT to Use",text:"High-conflict scenarios (flash sale inventory deduction). Pessimistic locking or database-level locking (SELECT FOR UPDATE) is better."},
+    {label:"Handling Conflicts",list:[
+      "Catch OptimisticLockException / ObjectOptimisticLockingFailureException",
+      "Option 1: Retry — re-fetch and re-apply changes",
+      "Option 2: Inform user — 'Someone else changed this record, please refresh'",
+      "Option 3: Merge changes — complex but best UX for collaborative editing",
+    ]},
+  ],
+  code:`@Entity
+public class Product {
+    @Id @GeneratedValue private Long id;
+    private String name;
+    private int stock;
+
+    @Version  // Optimistic locking version
+    private Long version;
+}
+
+// Concurrent update scenario:
+// Thread A: loads product (version=5, stock=10)
+// Thread B: loads product (version=5, stock=10)
+// Thread A: stock=9, saves → UPDATE ... SET stock=9, version=6 WHERE id=1 AND version=5 → SUCCESS
+// Thread B: stock=9, saves → UPDATE ... SET stock=9, version=6 WHERE id=1 AND version=5 → 0 rows affected!
+// Thread B gets OptimisticLockException
+
+// Service with retry
+@Service
+public class ProductService {
+
+    @Retryable(
+        retryFor = OptimisticLockingFailureException.class,
+        maxAttempts = 3,
+        backoff = @Backoff(delay = 50, multiplier = 2)
+    )
+    @Transactional
+    public Product updateStock(Long productId, int delta) {
+        Product product = productRepo.findById(productId).orElseThrow();
+        if (product.getStock() + delta < 0) {
+            throw new InsufficientStockException();
+        }
+        product.setStock(product.getStock() + delta);
+        return productRepo.save(product);
+    }
+
+    @Recover
+    public Product recoverFromLock(OptimisticLockingFailureException ex, Long id, int delta) {
+        throw new ConcurrentModificationException(
+            "Product " + id + " was modified concurrently. Please retry.");
+    }
+}`,
+  pitfall:"For inventory deduction during flash sales, optimistic locking with retries causes thundering herd — 1000 concurrent buyers, only 1 succeeds, 999 retry repeatedly. Use Redis atomic operations (DECRBY) or pessimistic locking instead.",
+  tip:"Generate UUID for @Version type instead of Long to detect stale reads in distributed systems where clocks may drift."
+},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentSectionId = sections[0].id;
+let currentTopicIdx = 0;
+let currentTab = "content";
+let big4ActiveCat = "all";
+let big4ActiveDiff = "all";
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  buildSidebar();
+  renderTopic();
+  buildBig4Sidebar();
+  buildBig4Filters();
+  renderBig4Questions();
+  buildProgressBars();
+});
+
+// ============================================================
+// PAGE SWITCHING
+// ============================================================
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ============================================================
+// SIDEBAR
+// ============================================================
+function buildSidebar() {
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = '';
+  sections.forEach(sec => {
+    const [r,g,b] = sec.rgb.split(',');
+    const secDiv = document.createElement('div');
+
+    const btn = document.createElement('button');
+    btn.className = 'sidebar-section-btn' + (sec.id === currentSectionId ? ' active' : '');
+    btn.style.setProperty('--section-color', sec.color);
+    btn.style.setProperty('--sr', r); btn.style.setProperty('--sg', g); btn.style.setProperty('--sb', b);
+    btn.innerHTML = `<span>${sec.emoji}</span><span>${sec.title}</span><span class="sec-count">${sec.topics.length}</span>`;
+    btn.onclick = () => { currentSectionId = sec.id; currentTopicIdx = 0; currentTab = 'content'; buildSidebar(); renderTopic(); };
+
+    const topicsDiv = document.createElement('div');
+    topicsDiv.className = 'sidebar-topics' + (sec.id === currentSectionId ? ' open' : '');
+    sec.topics.forEach((t, i) => {
+      const tbtn = document.createElement('button');
+      tbtn.className = 'sidebar-topic-btn' + (sec.id === currentSectionId && i === currentTopicIdx ? ' active' : '');
+      const dotColor = t.level === 'Beginner' ? '#22c55e' : t.level === 'Intermediate' ? '#f59e0b' : '#ef4444';
+      tbtn.innerHTML = `<div class="level-dot" style="background:${dotColor}"></div><span>${t.title}</span>`;
+      tbtn.onclick = (e) => { e.stopPropagation(); currentSectionId = sec.id; currentTopicIdx = i; currentTab = 'content'; buildSidebar(); renderTopic(); };
+      topicsDiv.appendChild(tbtn);
+    });
+
+    secDiv.appendChild(btn);
+    secDiv.appendChild(topicsDiv);
+    nav.appendChild(secDiv);
+  });
+}
+
+function buildProgressBars() {
+  const el = document.getElementById('progress-bars');
+  sections.forEach(sec => {
+    el.innerHTML += `
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-label">
+          <span>${sec.emoji} ${sec.title}</span>
+          <span style="color:${sec.color}">${sec.topics.length}</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:100%;background:${sec.color}"></div>
+        </div>
+      </div>`;
+  });
+}
+
+// ============================================================
+// TOPIC RENDER
+// ============================================================
+function renderTopic() {
+  const sec = sections.find(s => s.id === currentSectionId);
+  const topic = sec.topics[currentTopicIdx];
+  const [r,g,b] = sec.rgb.split(',');
+  const levelColor = topic.level === 'Beginner' ? '#22c55e' : topic.level === 'Intermediate' ? '#f59e0b' : '#ef4444';
+
+  const el = document.getElementById('topic-display');
+  el.style.setProperty('--section-color', sec.color);
+  el.style.setProperty('--sr', r); el.style.setProperty('--sg', g); el.style.setProperty('--sb', b);
+
+  el.innerHTML = `
+    <div class="topic-header">
+      <div class="topic-meta">
+        <span class="level-badge" style="background:${levelColor}20;color:${levelColor};border:1px solid ${levelColor}40">${topic.level}</span>
+        <span class="section-crumb">${sec.emoji} ${sec.title}</span>
+      </div>
+      <div class="topic-title">${topic.title}</div>
+    </div>
+    <div class="content-tabs">
+      <button class="content-tab ${currentTab==='content'?'active':''}" onclick="switchTab('content')">📖 Concepts</button>
+      <button class="content-tab ${currentTab==='code'?'active':''}" onclick="switchTab('code')">💻 Code</button>
+      <button class="content-tab ${currentTab==='interview'?'active':''}" onclick="switchTab('interview')">🎯 Interview Q&A</button>
+    </div>
+    <div id="tab-content" class="tab-panel active">${renderConceptContent(topic.content, sec.color)}</div>
+    <div id="tab-code" class="tab-panel ${currentTab==='code'?'active':''}">${renderCodeBlock(topic.code)}</div>
+    <div id="tab-interview" class="tab-panel ${currentTab==='interview'?'active':''}">${renderInterviewPanel(topic.interview, sec.color)}</div>
+    <div class="topic-nav">
+      <button class="nav-btn" onclick="prevTopic()" ${currentTopicIdx===0?'disabled':''}>← Previous</button>
+      <span class="nav-counter">${currentTopicIdx+1} / ${sec.topics.length}</span>
+      <button class="nav-btn next" onclick="nextTopic()" ${currentTopicIdx===sec.topics.length-1?'disabled':''}>Next →</button>
+    </div>
+  `;
+
+  // Show correct tab
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-'+currentTab)?.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function renderConceptContent(content, color) {
+  return '<div class="concept-body">' + content.map(item => {
+    if (item.type === 'h') return `<div class="concept-h">${item.text}</div>`;
+    if (item.type === 'p') return `<p class="concept-p">${formatBold(item.text)}</p>`;
+    if (item.type === 'li') return item.items.map(i => `
+      <div class="concept-li">
+        <span class="concept-li-bullet">▸</span>
+        <span class="concept-li-text">${formatBold(i[0])}</span>
+      </div>`).join('');
+    return '';
+  }).join('') + '</div>';
+}
+
+function renderCodeBlock(code) {
+  return `
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dot" style="background:#ff5f57"></div>
+        <div class="code-dot" style="background:#ffbd2e"></div>
+        <div class="code-dot" style="background:#28c840"></div>
+        <span class="code-label">Java — Production Code</span>
+        <button class="code-copy" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre class="code-pre">${syntaxHighlight(escapeHtml(code))}</pre>
+    </div>`;
+}
+
+function renderInterviewPanel(questions, color) {
+  return `
+    <div class="interview-tip">
+      <div class="interview-tip-title">💡 5-YEAR EXPERIENCE TIP</div>
+      <div class="interview-tip-text">Focus on the "why" not just the "what". Explain trade-offs, mention production examples, discuss edge cases. Interviewers at this level want depth.</div>
+    </div>
+    ${questions.map((q,i) => `
+      <div class="iq-card">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span class="iq-num">Q${i+1}</span>
+          <span class="iq-text">${q}</span>
+        </div>
+      </div>`).join('')}`;
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-'+tab)?.classList.add('active');
+}
+
+function prevTopic() {
+  if (currentTopicIdx > 0) { currentTopicIdx--; renderTopic(); buildSidebar(); }
+}
+function nextTopic() {
+  const sec = sections.find(s => s.id === currentSectionId);
+  if (currentTopicIdx < sec.topics.length - 1) { currentTopicIdx++; renderTopic(); buildSidebar(); }
+}
+
+// ============================================================
+// BIG4 PAGE
+// ============================================================
+function buildBig4Sidebar() {
+  const nav = document.getElementById('big4-cat-nav');
+  nav.innerHTML = '';
+
+  const allBtn = document.createElement('button');
+  allBtn.className = 'big4-cat-btn active';
+  allBtn.style.setProperty('--cat-color', '#6366f1');
+  allBtn.dataset.cat = 'all';
+  allBtn.innerHTML = `<span class="cat-icon">🎯</span><span>All Categories</span><span class="cat-badge">${big4Questions.length}</span>`;
+  allBtn.onclick = () => { big4ActiveCat = 'all'; updateBig4ActiveCat(allBtn); renderBig4Questions(); };
+  nav.appendChild(allBtn);
+
+  big4Categories.forEach(cat => {
+    const count = big4Questions.filter(q => q.cat === cat.id).length;
+    if (count === 0) return;
+    const btn = document.createElement('button');
+    btn.className = 'big4-cat-btn';
+    btn.style.setProperty('--cat-color', cat.color);
+    btn.dataset.cat = cat.id;
+    btn.innerHTML = `<span class="cat-icon">${cat.icon}</span><span>${cat.label}</span><span class="cat-badge">${count}</span>`;
+    btn.onclick = () => { big4ActiveCat = cat.id; updateBig4ActiveCat(btn); renderBig4Questions(); };
+    nav.appendChild(btn);
+  });
+}
+
+function updateBig4ActiveCat(activeBtn) {
+  document.querySelectorAll('.big4-cat-btn').forEach(b => b.classList.remove('active'));
+  activeBtn.classList.add('active');
+}
+
+function buildBig4Filters() {
+  const el = document.getElementById('big4-filters');
+  ['all','Hard','Expert'].forEach(d => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (d==='all'?' active':'');
+    btn.textContent = d === 'all' ? 'All Difficulties' : d;
+    btn.onclick = () => {
+      big4ActiveDiff = d;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderBig4Questions();
+    };
+    el.appendChild(btn);
+  });
+}
+
+function renderBig4Questions() {
+  const container = document.getElementById('big4-questions-container');
+  let filtered = big4Questions;
+  if (big4ActiveCat !== 'all') filtered = filtered.filter(q => q.cat === big4ActiveCat);
+  if (big4ActiveDiff !== 'all') filtered = filtered.filter(q => q.difficulty === big4ActiveDiff);
+
+  // Group by category
+  const grouped = {};
+  filtered.forEach(q => {
+    if (!grouped[q.cat]) grouped[q.cat] = [];
+    grouped[q.cat].push(q);
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:60px;color:var(--text3)">No questions match current filters.</div>`;
+    return;
+  }
+
+  let html = '';
+  Object.entries(grouped).forEach(([catId, questions]) => {
+    const cat = big4Categories.find(c => c.id === catId) || {label:catId, icon:'❓', color:'#6366f1'};
+    html += `<div class="q-section">
+      <div class="q-section-title">
+        <span class="q-section-icon">${cat.icon}</span>
+        <span>${cat.label}</span>
+        <span style="font-size:12px;color:var(--text3);font-weight:400;margin-left:8px">${questions.length} questions</span>
+      </div>`;
+    questions.forEach((q, i) => {
+      const diffClass = q.difficulty === 'Expert' ? 'diff-expert' : q.difficulty === 'Hard' ? 'diff-hard' : 'diff-medium';
+      const companyTags = q.companies.map(c => `<span class="company-tag ctag-${c}">${c.charAt(0).toUpperCase()+c.slice(1)}</span>`).join('');
+      const tags = q.tags.map(t => `<span class="q-tag">${t}</span>`).join('');
+      const answerHtml = renderBig4Answer(q, cat.color);
+      html += `
+        <div class="q-card" id="qcard-${catId}-${i}">
+          <div class="q-card-header" onclick="toggleQCard('qcard-${catId}-${i}')">
+            <span class="q-difficulty ${diffClass}">${q.difficulty}</span>
+            <div style="flex:1">
+              <div class="q-question">${q.q}</div>
+              <div class="q-tags">${tags}</div>
+            </div>
+            <span class="q-expand-icon">⌄</span>
+          </div>
+          <div class="q-answer" style="--cat-color:${cat.color}">
+            <div class="q-answer-content">${answerHtml}</div>
+          </div>
+        </div>`;
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function renderBig4Answer(q, catColor) {
+  let html = `
+    <div class="ans-section">
+      <div class="ans-label">📌 SHORT ANSWER</div>
+      <div class="ans-text">${q.answer}</div>
+    </div>`;
+
+  if (q.explanation) {
+    html += `<div class="ans-section"><div class="ans-label">🔍 IN-DEPTH EXPLANATION</div>`;
+    q.explanation.forEach(exp => {
+      html += `<div style="margin-bottom:12px"><div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:5px">${exp.label}</div>`;
+      if (exp.text) html += `<div class="ans-text">${formatBold(exp.text)}</div>`;
+      if (exp.list) html += `<ul class="ans-list">${exp.list.map(li => `<li>${formatBold(li)}</li>`).join('')}</ul>`;
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  if (q.code) {
+    html += `<div class="ans-section">
+      <div class="ans-label">💻 CODE EXAMPLE</div>
+      <div class="ans-code">${syntaxHighlight(escapeHtml(q.code))}</div>
+    </div>`;
+  }
+
+  if (q.pitfall) {
+    html += `<div class="pitfall-box"><div class="pitfall-title">⚠️ COMMON PITFALL</div><div class="pitfall-text">${q.pitfall}</div></div>`;
+  }
+  if (q.tip) {
+    html += `<div class="tip-box"><div class="tip-title">✅ PRO TIP</div><div class="tip-text">${q.tip}</div></div>`;
+  }
+
+  const companyTags = q.companies.map(c => `<span class="company-tag ctag-${c}">${c.charAt(0).toUpperCase()+c.slice(1)}</span>`).join('');
+  html += `<div class="q-company-tags"><span style="font-size:10px;color:var(--text4);display:flex;align-items:center;margin-right:4px">ASKED AT:</span>${companyTags}</div>`;
+
+  return html;
+}
+
+function toggleQCard(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+// ============================================================
+// UTILITIES
+// ============================================================
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function formatBold(text) {
+  return text.replace(/\*\*([^*]+)\*\*/g, '<strong style="color:var(--text)">$1</strong>');
+}
+
+function syntaxHighlight(code) {
+  return code
+    .replace(/(\/\/[^\n]*)/g, '<span class="cmt">$1</span>')
+    .replace(/\b(public|private|protected|static|final|class|interface|enum|extends|implements|return|new|void|import|package|throws|try|catch|finally|if|else|for|while|do|switch|case|break|continue|null|true|false|this|super|abstract|synchronized|volatile|transient|instanceof)\b/g, '<span class="kw">$1</span>')
+    .replace(/(@\w+)/g, '<span class="ann">$1</span>')
+    .replace(/("(?:[^"\\]|\\.)*")/g, '<span class="str">$1</span>')
+    .replace(/\b([A-Z][a-zA-Z]+(?:Repository|Service|Controller|Config|Manager|Factory|Handler|Filter|Processor|Event|Exception|DTO|Entity|Mapper))\b/g, '<span class="cls">$1</span>');
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('.code-pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+</script>
+</body>
+</html>
